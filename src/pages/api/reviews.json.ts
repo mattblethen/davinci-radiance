@@ -5,23 +5,44 @@ const API_KEY  = import.meta.env.GOOGLE_MAPS_API_KEY;
 
 export const prerender = false;
 
+/** Try to read /src/data/reviews.json as raw text (works in build & serverless) */
+/** Try to read /src/data/reviews.json as raw text (works in build & serverless) */
+function readLocalReviews(): any | null {
+  try {
+    // ✅ new Vite syntax: use query/import instead of `as: 'raw'`
+    const files = import.meta.glob('/src/data/reviews.json', {
+      eager: true,
+      query: '?raw',
+      import: 'default',
+    }) as Record<string, string>;
+
+    const key = Object.keys(files)[0];
+    if (!key) return null;
+
+    const raw = files[key];
+    const parsed = JSON.parse(raw);
+    parsed.reviews = (parsed.reviews ?? []).filter((r: any) => (r?.rating ?? 0) >= 4);
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+
 export const GET: APIRoute = async () => {
-  // If env vars are missing, serve from local JSON (4★+ only)
+  // Fallback to local JSON when envs are missing
   if (!PLACE_ID || !API_KEY) {
-    try {
-      const localMod = await import('../../data/reviews.json'); // ✅ correct path
-      const local = (localMod as any).default ?? localMod;
-      const reviews = (local.reviews ?? []).filter((r: any) => (r?.rating ?? 0) >= 4);
-      return new Response(
-        JSON.stringify({ ...local, reviews }),
-        { status: 200, headers: { 'content-type': 'application/json' } }
-      );
-    } catch {
-      return new Response(JSON.stringify({ name: null, reviews: [] }), {
+    const local = readLocalReviews();
+    if (local) {
+      return new Response(JSON.stringify(local), {
         status: 200,
-        headers: { 'content-type': 'application/json' }
+        headers: { 'content-type': 'application/json' },
       });
     }
+    return new Response(JSON.stringify({ name: null, reviews: [] }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
   }
 
   // Live fetch via Google Places (4★+ only)
@@ -62,7 +83,9 @@ export const GET: APIRoute = async () => {
       },
     });
   } catch {
-    return new Response(JSON.stringify({ name: null, reviews: [] }), {
+    // If Google fetch fails, fall back to local JSON (if present)
+    const local = readLocalReviews();
+    return new Response(JSON.stringify(local ?? { name: null, reviews: [] }), {
       status: 200,
       headers: { 'content-type': 'application/json' },
     });
