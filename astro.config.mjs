@@ -11,10 +11,10 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  vite: {
-    plugins: [tailwindcss()]
-  },
+  // 👇 enable functions for endpoints like /api/reviews.json
+  output: 'server', // or 'server'
 
+  vite: { plugins: [tailwindcss()] },
   integrations: [mdx(), sitemap()],
-  adapter: vercel()
+  adapter: vercel(), // v9 is fine
 });

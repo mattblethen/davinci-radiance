@@ -1,1 +1,8 @@
+/* Tailwind v4 entry */
 @import "tailwindcss";
+
+/* optional: a couple of sensible tweaks */
+html, body { min-height: 100%; }
+.desktopCTA{
+    display:none;
+}

@@ -1,11 +1,250 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Base from "../layouts/Base.astro";
+import { SITE } from "../config/site";
+import { Image } from "astro:assets";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Images
+import heroImg from "../assets/images/hero.avif";
+import processImg from "../assets/images/IMG_6743.JPG";
+import beforeAfterStack from "../assets/images/C535B5CD-967D-4F4A-BCA1-1ABFA92A2D3C.PNG";
+import baTitle from "../assets/images/Screen Shot 2020-01-31 at 5.18.58 PM.png";
+import smilesImg from "../assets/images/Davinci Corporate image.jpeg";
+import session1 from "../assets/images/InSession.jpeg";
+import session2 from "../assets/images/InSession2.jpeg";
+import logoDark from "../assets/images/logo.png";
+
+// LocalBusiness schema
+const schemaLocal = SITE.locations.map((loc) => ({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: `${SITE.name} — ${loc.label}`,
+  image: new URL("/favicon.svg", SITE.url).toString(),
+  url: SITE.url,
+  telephone: loc.phone,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: loc.street,
+    addressLocality: loc.city,
+    addressRegion: loc.region,
+    postalCode: loc.postal,
+    addressCountry: "US",
+  },
+  areaServed: "Colorado, USA",
+  sameAs: Object.values(SITE.social).filter(Boolean),
+}));
+
+const PAGE = {
+  title: "DaVinci Radiance — Professional Teeth Whitening in Lone Tree & Colorado Springs",
+  description: "Plant & mineral-based teeth whitening. Safe, fast, and low-sensitivity results. Call or text today to schedule your session.",
+};
+
+// Load reviews from our API (4★+). Show up to 6 on the homepage.
+let reviews: any[] = [];
+let placeMeta: { rating?: number; user_ratings_total?: number } = {};
+try {
+  const apiUrl = new URL('/api/reviews.json', Astro.url).toString();
+  const r = await fetch(apiUrl);
+  const data = await r.json();
+  reviews = (data?.reviews ?? []).slice(0, 6);
+  placeMeta = { rating: data?.rating, user_ratings_total: data?.user_ratings_total };
+} catch (_) {}
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<Base title={PAGE.title} description={PAGE.description} schema={schemaLocal}>
+  <!-- HERO -->
+  <section class="relative mx-auto max-w-7xl pt-10 md:pt-14">
+    <div class="grid items-center gap-8 md:grid-cols-2">
+      <div>
+        <h1 class="text-3xl/tight font-semibold text-slate-900 sm:text-4xl md:text-5xl">
+          Your Best Smile Starts Here.
+        </h1>
+        <p class="mt-4 max-w-prose text-slate-600">
+          Professional teeth whitening using FDA-approved plant & mineral based gels. Safe, fast, and low sensitivity.
+        </p>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href={`tel:${SITE.phone}`} class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700">
+            Call {SITE.phoneHuman}
+          </a>
+          <a href={`sms:${SITE.sms}`} class="inline-flex items-center justify-center rounded-lg border border-emerald-600 px-5 py-3 font-semibold text-emerald-700 hover:bg-emerald-50">
+            Text Us to Schedule
+          </a>
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center gap-4 text-sm text-slate-600">
+          <div class="inline-flex items-center gap-2"><span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span> FDA Approved</div>
+          <div class="inline-flex items-center gap-2"><span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span> Plant & Mineral Based</div>
+          <div class="inline-flex items-center gap-2"><span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span> Low Sensitivity</div>
+          <div class="inline-flex items-center gap-2"><span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span> Locally Owned</div>
+        </div>
+      </div>
+
+      <div class="overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5">
+        <Image
+          src={heroImg}
+          alt="Smiling client outdoors in Colorado winter"
+          widths={[480, 768, 1024, 1280, 1600]}
+          sizes="(max-width: 768px) 100vw, 48rem"
+          loading="eager"
+          decoding="async"
+          class="block"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- BEFORE / AFTER -->
+  <section class="mx-auto mt-16 max-w-6xl">
+    <div class="text-center">
+      <Image
+        src={baTitle}
+        alt="Before and After"
+        widths={[480, 640, 800]}
+        sizes="(max-width: 768px) 90vw, 48rem"
+        class="mx-auto h-auto w-full max-w-2xl"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <p class="mt-3 text-center text-sm text-slate-500">
+      Real DaVinci Radiance clients Individual results vary.
+    </p>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="mx-auto mt-16 max-w-7xl">
+    <div class="grid items-center gap-10 md:grid-cols-2">
+      <div>
+        <h2 class="text-2xl font-semibold text-slate-900">Whitening in 3 Simple Steps</h2>
+        <ol class="mt-4 space-y-3 text-slate-700">
+          <li><span class="font-medium text-slate-900">1.</span> Apply whitening gel (upper & lower arch)</li>
+          <li><span class="font-medium text-slate-900">2.</span> Blue LED light activation</li>
+          <li><span class="font-medium text-slate-900">3.</span> Rinse & reveal a radiant smile</li>
+        </ol>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href={`tel:${SITE.phone}`} class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700">Call to Schedule</a>
+          <a href={`sms:${SITE.sms}`} class="inline-flex items-center justify-center rounded-lg border border-emerald-600 px-5 py-3 font-semibold text-emerald-700 hover:bg-emerald-50">Text Us a Question</a>
+        </div>
+      </div>
+
+      <div class="overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5">
+        <Image
+          src={processImg}
+          alt="Client under LED light during whitening"
+          widths={[480, 768, 1152]}
+          sizes="(max-width: 768px) 100vw, 42rem"
+          loading="lazy"
+          decoding="async"
+          class="block"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- GROUP EVENTS (discounts, no pricing) -->
+  <section class="mx-auto mt-16 max-w-7xl rounded-2xl bg-emerald-50/60 p-6 ring-1 ring-emerald-100">
+    <h2 class="text-2xl font-semibold text-slate-900">Group Events & Specials</h2>
+    <p class="mt-2 text-slate-700">
+      Planning a big day? We offer <span class="font-semibold">special rates for groups</span>—perfect for wedding parties, engagement shoots,
+      birthdays, reunions, prom groups, corporate teams, pageant squads, and content creator bundles.
+    </p>
+    <ul class="mt-4 grid gap-2 text-slate-700 sm:grid-cols-2">
+      <li>• Wedding parties & engagement shoots</li>
+      <li>• Birthdays & family reunions</li>
+      <li>• Prom groups & pageant teams</li>
+      <li>• Corporate headshots & team events</li>
+      <li>• Creator/content bundles</li>
+    </ul>
+    <div class="mt-5 flex flex-wrap gap-3">
+      <a href={`tel:${SITE.phone}`} class="rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700">Call for a Group Quote</a>
+      <a href={`sms:${SITE.sms}`} class="rounded-lg border border-emerald-600 px-5 py-3 font-semibold text-emerald-700 hover:bg-emerald-50">Text Your Event Details</a>
+    </div>
+    <p class="mt-2 text-sm text-slate-600">We’ll tailor your session count, timing, and location for your group—ask about on-site options.</p>
+  </section>
+
+  <!-- REVIEWS (latest 4–6 pulled from Google, 4★+) -->
+  <section class="mx-auto mt-16 max-w-7xl">
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <h2 class="text-2xl font-semibold text-slate-900">Clients Love Their Results</h2>
+        {placeMeta?.rating && placeMeta?.user_ratings_total && (
+          <p class="mt-1 text-slate-600">
+            Google rating <span class="font-medium">{placeMeta.rating}</span>/5 · {placeMeta.user_ratings_total} reviews
+          </p>
+        )}
+      </div>
+      <a href="/reviews" class="text-sm font-semibold text-emerald-700 hover:text-emerald-800">See all reviews →</a>
+    </div>
+
+    <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {reviews.length === 0 && (
+        <div class="rounded-xl border border-slate-200 p-5 text-slate-600">Reviews will appear here soon.</div>
+      )}
+
+      {reviews.map((rv) => (
+        <article class="rounded-xl border border-slate-200 p-5 bg-white shadow-sm">
+          <div class="flex items-center gap-3">
+            {rv.profile_photo_url && <img src={rv.profile_photo_url} alt={rv.author_name} width="40" height="40" class="h-10 w-10 rounded-full" />}
+            <div>
+              <div class="font-medium text-slate-900">{rv.author_name}</div>
+              <div class="text-sm text-slate-500">{rv.time_desc}</div>
+            </div>
+          </div>
+          <div class="mt-3 text-amber-500" aria-label={`${rv.rating} out of 5 stars`}>
+            {'★★★★★'.slice(0, rv.rating)}<span class="text-slate-300">{'★★★★★'.slice(rv.rating)}</span>
+          </div>
+          <p class="mt-3 text-slate-700 whitespace-pre-wrap">{rv.text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- (Lower priority) SOCIAL / GALLERY -->
+  <section class="mx-auto mt-16 max-w-7xl">
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="overflow-hidden rounded-2xl ring-1 ring-black/5">
+        <Image src={smilesImg} alt="Happy clients smiling after whitening" widths={[480, 768, 1000]} sizes="(max-width: 768px) 100vw, 36rem" loading="lazy" decoding="async" class="block" />
+      </div>
+      <div class="grid gap-6">
+        <div class="overflow-hidden rounded-2xl ring-1 ring-black/5">
+          <Image src={session1} alt="In-session whitening with LED light" widths={[480, 768, 1152]} sizes="(max-width: 768px) 100vw, 36rem" loading="lazy" decoding="async" class="block" />
+        </div>
+        <div class="overflow-hidden rounded-2xl ring-1 ring-black/5">
+          <Image src={session2} alt="Whitening device in use during session" widths={[480, 768, 1152]} sizes="(max-width: 768px) 100vw, 36rem" loading="lazy" decoding="async" class="block" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATIONS + CTA -->
+  <section class="mx-auto mt-16 max-w-7xl rounded-2xl bg-slate-50 p-6 ring-1 ring-slate-200">
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 overflow-hidden rounded">
+          <Image src={logoDark} alt="DaVinci Radiance mark" widths={[40]} class="h-10 w-10" />
+        </div>
+        <div>
+          <div class="font-semibold text-slate-900">Two Colorado Locations</div>
+          <div class="text-sm text-slate-600">Lone Tree & Colorado Springs</div>
+        </div>
+      </div>
+      <ul class="space-y-3 text-sm text-slate-700">
+        {SITE.locations.map((loc) => (
+          <li class="rounded-lg border border-slate-200 p-3">
+            <div class="font-medium">{loc.label}</div>
+            <div class="text-slate-600">{loc.street}</div>
+            <div class="text-slate-600">{loc.city}, {loc.region} {loc.postal}</div>
+          </li>
+        ))}
+      </ul>
+      <div class="grid content-start gap-3">
+        <a href={`tel:${SITE.phone}`} class="rounded-lg bg-emerald-600 px-5 py-3 text-center font-semibold text-white hover:bg-emerald-700">Call Now</a>
+        <a href={`sms:${SITE.sms}`} class="rounded-lg border border-emerald-600 px-5 py-3 text-center font-semibold text-emerald-700 hover:bg-emerald-50">Text Us Today</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Spacer so the mobile fixed CTA doesn't cover the footer -->
+  <div class="h-24 md:hidden"></div>
+</Base>
