@@ -1,19 +1,25 @@
 {
   "name": "davinci-radiance",
-  "type": "module",
   "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20 <23"
+  },
   "scripts": {
     "dev": "astro dev",
+    "dev:vercel": "vercel dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "build:vercel": "vercel build",
+    "deploy:prebuilt": "vercel deploy --prebuilt",
     "astro": "astro",
     "format": "prettier --write .",
     "lint": "eslint . --ext .astro,.ts,.tsx,.js,.jsx",
     "test:perf": "lhci autorun"
   },
   "dependencies": {
-    "@astrojs/vercel": "^9.0.0",
     "astro": "^5.15.3",
+    "@astrojs/vercel": "^9.0.0",
     "schema-dts": "^1.1.5",
     "sharp": "^0.34.4"
   },
@@ -30,6 +36,7 @@
     "eslint-plugin-astro": "^1.4.0",
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
-    "tailwindcss": "^4.1.16"
+    "tailwindcss": "^4.1.16",
+    "vercel": "^39.1.0"
   }
 }

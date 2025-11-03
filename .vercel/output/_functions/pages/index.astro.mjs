@@ -1,7 +1,7 @@
 import { c as createComponent, m as maybeRenderHead, a as addAttribute, r as renderTemplate, b as createAstro, d as renderComponent, e as renderSlot, f as renderHead, F as Fragment } from '../chunks/astro/server_CKvN60hB.mjs';
 import 'clsx';
 /* empty css                                 */
-import { $ as $$Image } from '../chunks/_astro_assets_DMRf5CfV.mjs';
+import { $ as $$Image } from '../chunks/_astro_assets_2eNjLm-2.mjs';
 export { renderers } from '../renderers.mjs';
 
 const SITE = {
@@ -68,7 +68,7 @@ var __freeze = Object.freeze;
 var __defProp = Object.defineProperty;
 var __template = (cooked, raw) => __freeze(__defProp(cooked, "raw", { value: __freeze(raw || cooked.slice()) }));
 var _a, _b;
-const $$Astro$1 = createAstro("https://davinciradiance.com");
+const $$Astro$1 = createAstro("https://davinci-radiance.vercel.app");
 const $$Base = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$1, $$props, $$slots);
   Astro2.self = $$Base;
@@ -177,7 +177,7 @@ const logoDark = new Proxy({"src":"/_astro/logo.D3Ly3pNj.png","width":4245,"heig
 						}
 					});
 
-const $$Astro = createAstro("https://davinciradiance.com");
+const $$Astro = createAstro("https://davinci-radiance.vercel.app");
 const $$Index = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
   Astro2.self = $$Index;

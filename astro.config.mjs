@@ -1,14 +1,31 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 
 export default defineConfig({
-  output: 'server',                  // ✅ needed for API routes
+  // Needed so /api/* routes run on Vercel
+  output: 'server',
+
+  // Canonical URL (update to your final custom domain when ready)
   site: 'https://davinci-radiance.vercel.app',
-  vite: { plugins: [tailwindcss()] },
+
+  // ✅ Astro v5 image service config (use entrypoint string)
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/sharp'
+    }
+  },
+
+  vite: {
+    plugins: [tailwindcss()]
+  },
+
   integrations: [mdx(), sitemap()],
-  adapter: vercel(),                 // ✅ v9 adapter
+
+  // Vercel adapter v9 for Astro v5
+  adapter: vercel()
 });
