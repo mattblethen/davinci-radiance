@@ -1,19 +1,14 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 
 export default defineConfig({
-  // Needed so /api/* routes run on Vercel
-  output: 'server',
-
-  // Required by @astrojs/sitemap for absolute URLs
-  site: 'https://davinciradiance.com',
-
+  output: 'server',                  // ✅ needed for API routes
+  site: 'https://davinci-radiance.vercel.app',
   vite: { plugins: [tailwindcss()] },
   integrations: [mdx(), sitemap()],
-  adapter: vercel(), // v9 is correct for Astro v5
+  adapter: vercel(),                 // ✅ v9 adapter
 });
