@@ -2,21 +2,22 @@
 // src/components/Header.astro
 import { SITE } from "../config/site";
 import { Image } from "astro:assets";
-import logoHeader from "../assets/images/logoHeader.png";
+import logoHeader from "../assets/images/logoheader.png";
 
 const { nav } = SITE;
 ---
 
-<header class="sticky top-0 z-50 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm">
+<!-- Darkened header for white logo contrast -->
+<header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur supports-[backdrop-filter]:bg-slate-900/90 shadow-sm">
   <!-- Top contact bar (desktop) -->
-  <div class="hidden md:flex items-center justify-between px-4 lg:px-8 py-2 text-sm">
-    <p class="text-slate-600">
-      Now serving <span class="font-medium">Lone Tree</span> & <span class="font-medium">Colorado Springs</span>
+  <div class="hidden md:flex items-center justify-between px-4 lg:px-8 py-2 text-sm text-slate-200">
+    <p>
+      
     </p>
     <div class="flex items-center gap-3">
       <a
         href={`tel:${SITE.phone}`}
-        class="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-3 py-1.5 font-medium text-white hover:bg-emerald-700 transition"
+        class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-3 py-1.5 font-medium text-white hover:bg-emerald-400 transition"
         aria-label={`Call ${SITE.phoneHuman}`}
       >
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 5.5A2.5 2.5 0 0 1 4.5 3H6a1 1 0 0 1 1 .9 15.9 15.9 0 0 0 1.2 4.2 1 1 0 0 1-.23 1.1l-1.3 1.3a14.5 14.5 0 0 0 6.7 6.7l1.3-1.3a1 1 0 0 1 1.1-.23 15.9 15.9 0 0 0 4.2 1.2 1 1 0 0 1 .9 1v1.5A2.5 2.5 0 0 1 18.5 22h-1A15.5 15.5 0 0 1 2 6.5v-1z"/></svg>
@@ -24,7 +25,7 @@ const { nav } = SITE;
       </a>
       <a
         href={`sms:${SITE.sms}`}
-        class="inline-flex items-center gap-2 rounded-full border border-emerald-600 text-emerald-700 px-3 py-1.5 font-medium hover:bg-emerald-50 transition"
+        class="inline-flex items-center gap-2 rounded-full border border-emerald-400 text-emerald-300 px-3 py-1.5 font-medium hover:bg-slate-800 transition"
         aria-label="Text us to schedule"
       >
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a4 4 0 0 1-4 4H8l-5 3V6a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v9z"/></svg>
@@ -36,9 +37,9 @@ const { nav } = SITE;
   <!-- Main nav -->
   <div class="px-4 lg:px-8 py-3">
     <div class="mx-auto flex max-w-7xl items-center justify-between">
-      <!-- Brand (image) -->
+      <!-- Brand logo -->
       <a href="/" class="flex items-center gap-3" aria-label={SITE.name}>
-        <div class="h-9 w-auto md:h-10">
+        <div class="h-20 w-auto md:h-20">
           <Image
             src={logoHeader}
             alt={SITE.name}
@@ -52,21 +53,18 @@ const { nav } = SITE;
       </a>
 
       <!-- Desktop nav -->
-      <nav class="hidden md:flex items-center gap-6 text-[15px] text-slate-700">
+      <nav class="hidden md:flex items-center gap-6 text-[15px] text-slate-100">
         {nav.map((item) => (
-          <a class="hover:text-slate-900" href={item.href}>{item.label}</a>
+          <a class="hover:text-emerald-300" href={item.href}>{item.label}</a>
         ))}
       </nav>
 
-      <!-- Desktop CTAs -->
-      <!-- (intentionally empty; top bar + mobile sticky handle main CTAs) -->
-
-      <!-- Mobile menu group (checkbox + button + panel) -->
+      <!-- Mobile menu -->
       <div class="md:hidden relative">
         <input id="nav-toggle" type="checkbox" class="peer sr-only" />
         <label
           for="nav-toggle"
-          class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-slate-300 text-slate-700"
+          class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-slate-500 text-slate-100"
         >
           <span class="sr-only">Open menu</span>
           <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -74,19 +72,17 @@ const { nav } = SITE;
           </svg>
         </label>
 
-        <!-- Dropdown panel -->
         <div
-          class="absolute right-0 mt-2 w-72 rounded-xl border border-slate-200 bg-white p-3 shadow-xl
-                 hidden peer-checked:block"
+          class="absolute right-0 mt-2 w-72 rounded-xl border border-slate-700 bg-slate-900 p-3 shadow-xl hidden peer-checked:block"
         >
-          <nav class="grid gap-1 text-slate-700">
+          <nav class="grid gap-1 text-slate-100">
             {nav.map((item) => (
-              <a class="rounded-md px-3 py-2 hover:bg-slate-50" href={item.href}>{item.label}</a>
+              <a class="rounded-md px-3 py-2 hover:bg-slate-800" href={item.href}>{item.label}</a>
             ))}
           </nav>
           <div class="mt-3 grid grid-cols-2 gap-2">
-            <a href={`tel:${SITE.phone}`} class="rounded-lg bg-emerald-600 px-3 py-2 text-center font-semibold text-white hover:bg-emerald-700">Call</a>
-            <a href={`sms:${SITE.sms}`} class="rounded-lg border border-emerald-600 px-3 py-2 text-center font-semibold text-emerald-700 hover:bg-emerald-50">Text</a>
+            <a href={`tel:${SITE.phone}`} class="rounded-lg bg-emerald-600 px-3 py-2 text-center font-semibold text-white hover:bg-emerald-500">Call</a>
+            <a href={`sms:${SITE.sms}`} class="rounded-lg border border-emerald-400 px-3 py-2 text-center font-semibold text-emerald-300 hover:bg-slate-800">Text</a>
           </div>
         </div>
       </div>
@@ -94,7 +90,7 @@ const { nav } = SITE;
   </div>
 </header>
 
-<!-- ✅ Mobile sticky bottom CTA bar -->
+<!-- Mobile sticky bottom CTA -->
 <div class="md:hidden fixed inset-x-0 bottom-0 z-[60] border-t border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-[0_-2px_10px_rgba(0,0,0,0.08)]"
      style="padding-bottom: env(safe-area-inset-bottom);">
   <div class="mx-auto max-w-7xl px-4 lg:px-8 py-2">

@@ -1,0 +1,152 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE } from "../config/site";
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+const PAGE = {
+  title: "Results — DaVinci Radiance",
+  description:
+    "Real before & after results from DaVinci Radiance professional teeth whitening.",
+};
+
+// Schema (optional but nice to keep consistent)
+const schemaLocal = SITE.locations.map((loc) => ({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: `${SITE.name} — ${loc.label}`,
+  image: new URL("/favicon.svg", SITE.url).toString(),
+  url: SITE.url,
+  telephone: loc.phone,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: loc.street,
+    addressLocality: loc.city,
+    addressRegion: loc.region,
+    postalCode: loc.postal,
+    addressCountry: "US",
+  },
+  areaServed: "Colorado, USA",
+  sameAs: Object.values(SITE.social).filter(Boolean),
+}));
+
+/**
+ * Gather ALL BA images in src/assets/images/ba/
+ * Supports jpg/jpeg/png/webp/avif.
+ */
+const BA_GLOB = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/images/ba/*.{jpg,jpeg,png,webp,avif}",
+  { eager: true }
+);
+
+const ITEMS = Object.entries(BA_GLOB)
+  .map(([path, mod]) => {
+    const file = path.split("/").pop() ?? "";
+    const base = file.split(".")[0] ?? "";
+    const num = Number.parseInt(base, 10);
+    return {
+      src: mod.default,
+      file,
+      num: Number.isNaN(num) ? Infinity : num,
+      label: base,
+    };
+  })
+  // numeric first, then alpha if no number
+  .sort((a, b) => (a.num === b.num ? a.file.localeCompare(b.file) : a.num - b.num));
+---
+
+<Base title={PAGE.title} description={PAGE.description} schema={schemaLocal}>
+  <section class="mx-auto max-w-7xl px-4 pt-10 md:pt-12">
+    <header class="mb-6">
+      <h1 class="text-3xl font-semibold text-slate-900">Results</h1>
+      <p class="mt-2 text-slate-600">
+        Real DaVinci Radiance clients. Images are composite “Before / After” photos as labeled.
+      </p>
+    </header>
+
+    {ITEMS.length === 0 ? (
+      <div class="rounded-xl border border-slate-200 bg-white p-5 text-slate-600">
+        Add images in <code>src/assets/images/ba/</code> (e.g., <code>1.jpg</code>, <code>2.jpg</code>, …) and they will appear here automatically.
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {ITEMS.map((it) => (
+          <figure class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <button
+              type="button"
+              class="block w-full"
+              data-open-modal
+              data-src={it.src.src}
+              data-alt={`Before & after case ${it.label}`}
+            >
+              {/*
+                Use object-contain so each composite is fully visible (no crop).
+                Fixed heights keep the grid tidy; adjust if you want taller rows.
+              */}
+              <Image
+                src={it.src}
+                alt={`Before & after case ${it.label}`}
+                widths={[480, 640, 768, 1024]}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                loading="lazy"
+                decoding="async"
+                class="h-56 md:h-64 w-full object-contain bg-slate-50"
+              />
+            </button>
+          </figure>
+        ))}
+      </div>
+    )}
+
+    <p class="mt-4 text-center text-xs text-slate-500">
+      Individual results vary.
+    </p>
+  </section>
+
+  <!-- Fullscreen modal for zoom/pinch -->
+ <dialog id="ba-modal" class="m-0 p-0">
+  <button
+    type="button"
+    class="absolute right-4 top-4 z-10 rounded-md bg-white/90 px-3 py-1.5 text-sm font-semibold text-slate-900 ring-1 ring-slate-200 hover:bg-white"
+    data-close-modal
+  >Close</button>
+
+  <div class="flex h-[100dvh] w-[100vw] items-center justify-center p-2 sm:p-6">
+    <img id="ba-modal-img" alt="" class="max-h-full max-w-full object-contain" />
+  </div>
+</dialog>
+
+<style is:inline>
+  /* Make dialog truly full-screen */
+  :where(dialog)#ba-modal { margin: 0; padding: 0; border: 0; max-width: none; max-height: none; }
+  :where(dialog[open])#ba-modal { position: fixed; inset: 0; width: 100vw; height: 100dvh; }
+
+  /* Use the native backdrop for the dark overlay */
+  #ba-modal::backdrop { background: rgba(0,0,0,0.95); }
+
+  /* Prevent body scroll when modal is open (avoids right-edge gap from scrollbar) */
+  html:has(#ba-modal[open]) { overflow: hidden; }
+</style>
+
+  <script is:inline>
+    const modal = document.getElementById('ba-modal');
+    const modalImg = document.getElementById('ba-modal-img');
+
+    // Delegate clicks to open modal
+    document.addEventListener('click', (e) => {
+      const btn = e.target && (e.target.closest?.('[data-open-modal]'));
+      if (!btn) return;
+      modalImg.src = btn.getAttribute('data-src');
+      modalImg.alt = btn.getAttribute('data-alt') || '';
+      modal.showModal();
+    });
+
+    // Close behaviors
+    modal?.addEventListener('click', (e) => { if (e.target === modal) modal.close(); });
+    // Handle close button inside modal
+modal?.addEventListener('close', () => (modalImg.src = '')); // optional cleanup
+modal?.querySelector('[data-close-modal]')?.addEventListener('click', () => modal.close());
+
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal?.open) modal.close(); });
+  </script>
+</Base>

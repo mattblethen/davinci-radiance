@@ -10,6 +10,7 @@ export const SITE = {
     { label: "Home", href: "/" },
     { label: "Process", href: "/process" },
     { label: "Services", href: "/services" },
+    { label: "Results", href: "/results"},
     { label: "FAQ", href: "/faq" },
     { label: "About", href: "/about" }
   ],
