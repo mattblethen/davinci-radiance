@@ -8,10 +8,9 @@ export const SITE = {
   email: "hello@davinciradiance.com",
   nav: [
     { label: "Home", href: "/" },
-    { label: "Process", href: "/process" },
-    { label: "Services", href: "/services" },
+    { label: "Process", href: "/#process" },
     { label: "Results", href: "/results"},
-    { label: "FAQ", href: "/faq" },
+    { label: "FAQ", href: "/#faq" },
     { label: "About", href: "/about" }
   ],
   locations: [
