@@ -5,12 +5,25 @@ import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 
 // Images
-import heroImg from "../assets/images/hero.avif";
+import heroImg from "../assets/images/IMG_6743.JPG";
 import processImg from "../assets/images/InSession.jpeg";
 import smilesImg from "../assets/images/Davinci Corporate image.jpeg";
 import session1 from "../assets/images/InSession.jpeg";
 import session2 from "../assets/images/IMG_6743.JPG";
 import logoDark from "../assets/images/logo.png";
+
+// Primary/secondary locations (TS-safe with fallbacks)
+const SPRINGS = (
+  SITE.locations.find((l) => l.label === "North Colorado Springs") ??
+  SITE.locations[0]
+)!;
+
+const LONE = (
+  SITE.locations.find((l) => l.label === "Lone Tree") ??
+  SITE.locations.find((l) => l !== SPRINGS) ??
+  SITE.locations[1] ??
+  SITE.locations[0]
+)!;
 
 // LocalBusiness schema
 const schemaLocal = SITE.locations.map((loc) => ({
@@ -78,52 +91,60 @@ const BA_ITEMS = Object.entries(BA_GLOB)
   .map(([path, mod]) => {
     const file = path.split("/").pop() || "";
     const base = file.split(".")[0] ?? "";
-    const num = Number.parseInt(base, 10);
-    return { src: mod.default, file, num: Number.isNaN(num) ? 9999 : num };
+    return {
+      src: mod.default,
+      file,
+      num: Number.isNaN(parseInt(base, 10)) ? 9999 : parseInt(base, 10),
+    };
   })
   .sort((a, b) => a.num - b.num)
   .slice(0, 10);
 ---
 
 <Base title={PAGE.title} description={PAGE.description} schema={schemaLocal}>
-  <!-- ANNOUNCEMENT BAR -->
-  <div class="bg-emerald-50 ring-1 ring-emerald-100">
-    <div class="mx-auto max-w-7xl px-4 py-2 text-center text-sm text-emerald-900">
-      <span class="mr-2 inline-block h-2 w-2 rounded-full bg-emerald-500 align-middle"></span>
-      Now serving <strong>Lone Tree</strong> & <strong>Colorado Springs</strong>
-    </div>
-  </div>
-
   <!-- HERO -->
   <section class="relative mx-auto max-w-7xl px-4 pt-8 md:pt-12">
     <div class="grid items-center gap-8 md:grid-cols-2">
-      <div class="max-w-[600px]">
+      <!-- IMAGE first on mobile, second on desktop -->
+      <div class="order-1 md:order-2 overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5">
+        <Image
+          src={heroImg}
+          alt="Smiling client outdoors in Colorado winter"
+          widths={[480, 768, 1024, 1280, 1600]}
+          sizes="(max-width: 768px) 100vw, 48rem"
+          loading="eager"
+          decoding="async"
+          class="block w-full h-auto"
+        />
+      </div>
+
+      <!-- COPY second on mobile, first on desktop -->
+      <div class="order-2 md:order-1 max-w-[600px]">
         <h1 class="text-pretty text-3xl/tight font-semibold text-slate-900 sm:text-4xl md:text-5xl">
-          Your Best Smile Starts Here.
+          Your Most Radiant Smile Starts Here.
         </h1>
         <p class="mt-4 text-slate-600">
           Professional teeth whitening using FDA-approved plant & mineral-based
           gels. Safe, fast, and less sensitivity than chemical based whiteners.
         </p>
 
-        <div class="mt-6 flex flex-wrap gap-3">
+        <!-- UPDATED: dual call buttons (no text) -->
+        <div class="mt-6 grid gap-3 sm:flex sm:flex-wrap">
           <a
-            href={`tel:${SITE.phone}`}
+            href={`tel:${SPRINGS.phone}`}
             class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white shadow-sm hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
           >
-            Call {SITE.phoneHuman}
+            Call {SPRINGS.label} Location
           </a>
           <a
-            href={`sms:${SITE.sms}`}
+            href={`tel:${LONE.phone}`}
             class="inline-flex items-center justify-center rounded-lg border border-emerald-600 px-5 py-3 font-semibold text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
           >
-            Text Us to Schedule
+            Call {LONE.label} Location
           </a>
         </div>
 
-        <div
-          class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-700"
-        >
+        <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-700">
           <div class="inline-flex items-center gap-2">
             <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
             FDA Approved
@@ -142,18 +163,63 @@ const BA_ITEMS = Object.entries(BA_GLOB)
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5">
-        <Image
-          src={heroImg}
-          alt="Smiling client outdoors in Colorado winter"
-          widths={[480, 768, 1024, 1280, 1600]}
-          sizes="(max-width: 768px) 100vw, 48rem"
-          loading="eager"
-          decoding="async"
-          class="block"
-        />
+  <!-- LOCATIONS (with Directions buttons) -->
+  <section
+    class="mx-auto mt-10 max-w-7xl rounded-2xl bg-slate-50 px-4 py-8 ring-1 ring-slate-200"
+  >
+    <div class="flex items-center gap-3 pb-4">
+      <div class="h-10 w-10 overflow-hidden rounded">
+        <Image src={logoDark} alt="DaVinci Radiance mark" widths={[40]} class="h-10 w-10" />
       </div>
+      <div>
+        <div class="font-semibold text-slate-900">Two Colorado Locations</div>
+        <div class="text-sm text-slate-600">Colorado Springs & Lone Tree</div>
+      </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      {SITE.locations.map((loc) => {
+        const mapsQuery = encodeURIComponent(
+          `${loc.street}, ${loc.city}, ${loc.region} ${loc.postal}`
+        );
+        const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+
+        return (
+          <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div class="font-semibold text-slate-900">{loc.label}</div>
+            <div class="mt-1 text-slate-600">{loc.street}</div>
+            <div class="text-slate-600">
+              {loc.city}, {loc.region} {loc.postal}
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-3">
+              <a
+                href={`tel:${loc.phone}`}
+                class="rounded-lg bg-emerald-600 px-4 py-2.5 font-semibold text-white shadow-sm hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+              >
+                Call {loc.phoneHuman}
+              </a>
+              <a
+                href={`sms:${loc.phone}`}
+                class="rounded-lg border border-emerald-600 px-4 py-2.5 font-semibold text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+              >
+                Text {loc.phoneHuman}
+              </a>
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener"
+                class="rounded-lg border border-slate-300 px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+              >
+                Directions
+              </a>
+            </div>
+          </div>
+        );
+      })}
     </div>
   </section>
 
@@ -161,18 +227,16 @@ const BA_ITEMS = Object.entries(BA_GLOB)
   <section class="mx-auto mt-6 max-w-7xl px-4">
     <div class="grid gap-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200 sm:grid-cols-3">
       <div class="flex items-center gap-3 rounded-lg bg-emerald-50/60 p-3 ring-1 ring-emerald-100">
-        <div class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white font-semibold">10+</div>
+        <div class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white font-semibold">14</div>
         <div class="text-sm">
           <div class="font-semibold text-slate-900">Years of Experience</div>
-          
         </div>
       </div>
 
       <div class="flex items-center gap-3 rounded-lg bg-emerald-50/60 p-3 ring-1 ring-emerald-100">
         <div class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white font-semibold">∞</div>
         <div class="text-sm">
-          <div class="font-semibold text-slate-900">Thousands of Clients</div>
-          
+          <div class="font-semibold text-slate-900">Thousands of Clients' Teeth Whitened Every Year!</div>
         </div>
       </div>
 
@@ -182,13 +246,12 @@ const BA_ITEMS = Object.entries(BA_GLOB)
           <div class="font-semibold text-slate-900">
             {placeMeta?.rating ? `${placeMeta.rating}★ on Google` : "Top-Rated Service"}
           </div>
-          
         </div>
       </div>
     </div>
   </section>
 
-  <!-- BEFORE & AFTER — HORIZONTAL SCROLLER (single-image cases) -->
+  <!-- BEFORE & AFTER — HORIZONTAL SCROLLER -->
   <section class="mx-auto mt-10 max-w-7xl px-4">
     <div class="flex items-baseline justify-between gap-4">
       <h2 class="text-2xl font-semibold text-slate-900">Real Results</h2>
@@ -246,10 +309,6 @@ const BA_ITEMS = Object.entries(BA_GLOB)
         aria-label="Before and after gallery"
         role="region"
       >
-        <!--
-          IMPORTANT: we use object-contain on the image and a larger, fixed height
-          so the entire composite image is visible without cropping.
-        -->
         <div class="flex gap-4 items-stretch">
           {BA_ITEMS.length === 0 && (
             <div class="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
@@ -297,19 +356,14 @@ const BA_ITEMS = Object.entries(BA_GLOB)
         data-close-modal
       >Close</button>
 
-      <div class="flex h-[100dvh] w-[100vw] items-center justify-center p-2 sm:p-6">
+      <div class="flex h-[100dvh] w-[100vw] items-center justify-center p-2 sm:p-6 bg-black">
         <img id="ba-modal-img" alt="" class="max-h-full max-w-full object-contain" />
       </div>
     </dialog>
     <style is:inline>
-      /* Make dialog truly full-screen */
       :where(dialog)#ba-modal { margin: 0; padding: 0; border: 0; max-width: none; max-height: none; }
       :where(dialog[open])#ba-modal { position: fixed; inset: 0; width: 100vw; height: 100dvh; }
-
-      /* Use the native backdrop for the dark overlay */
       #ba-modal::backdrop { background: rgba(0,0,0,0.95); }
-
-      /* Prevent body scroll when modal is open (avoids right-edge gap from scrollbar) */
       html:has(#ba-modal[open]) { overflow: hidden; }
     </style>
 
@@ -321,12 +375,10 @@ const BA_ITEMS = Object.entries(BA_GLOB)
       const modal = document.getElementById('ba-modal');
       const modalImg = document.getElementById('ba-modal-img');
 
-      // Arrow buttons
       const step = () => Math.min(800, strip.clientWidth * 0.9);
       prev?.addEventListener('click', () => strip.scrollBy({ left: -step(), behavior: 'smooth' }));
       next?.addEventListener('click', () => strip.scrollBy({ left: step(), behavior: 'smooth' }));
 
-      // Convert vertical wheel to horizontal scrolling on desktop
       strip?.addEventListener('wheel', (e) => {
         if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
           e.preventDefault();
@@ -334,7 +386,6 @@ const BA_ITEMS = Object.entries(BA_GLOB)
         }
       }, { passive: false });
 
-      // Modal open
       strip?.addEventListener('click', (e) => {
         const btn = e.target && (e.target.closest?.('[data-open-modal]'));
         if (!btn) return;
@@ -343,7 +394,6 @@ const BA_ITEMS = Object.entries(BA_GLOB)
         modal.showModal();
       });
 
-      // Modal close
       modal?.addEventListener('click', (e) => {
         if (e.target === modal) modal.close();
       });
@@ -384,16 +434,17 @@ const BA_ITEMS = Object.entries(BA_GLOB)
           </li>
         </ol>
 
-        <div class="mt-6 flex flex-wrap gap-3">
+        <!-- UPDATED: dual call buttons (no text) -->
+        <div class="mt-6 grid gap-3 sm:flex sm:flex-wrap">
           <a
-            href={`tel:${SITE.phone}`}
+            href={`tel:${SPRINGS.phone}`}
             class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white shadow-sm hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-            >Call to Schedule</a
+            >Call {SPRINGS.label} Location</a
           >
           <a
-            href={`sms:${SITE.sms}`}
+            href={`tel:${LONE.phone}`}
             class="inline-flex items-center justify-center rounded-lg border border-emerald-600 px-5 py-3 font-semibold text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-            >Text Us a Question</a
+            >Call {LONE.label} Location</a
           >
         </div>
       </div>
@@ -431,18 +482,21 @@ const BA_ITEMS = Object.entries(BA_GLOB)
       <li>• Corporate headshots & team events</li>
       <li>• Creator/content bundles</li>
     </ul>
-    <div class="mt-5 flex flex-wrap gap-3">
+
+    <!-- UPDATED: dual call buttons (no text) -->
+    <div class="mt-5 grid gap-3 sm:flex sm:flex-wrap">
       <a
-        href={`tel:${SITE.phone}`}
+        href={`tel:${SPRINGS.phone}`}
         class="rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white shadow-sm hover:bg-emerald-700"
-        >Call for a Group Quote</a
+        >Call {SPRINGS.label} Location</a
       >
       <a
-        href={`sms:${SITE.sms}`}
+        href={`tel:${LONE.phone}`}
         class="rounded-lg border border-emerald-600 px-5 py-3 font-semibold text-emerald-700 hover:bg-emerald-50"
-        >Text Your Event Details</a
+        >Call {LONE.label} Location</a
       >
     </div>
+
     <p class="mt-2 text-sm text-slate-600">
       We’ll tailor your session count, timing, and location for your group—ask
       about on-site options.
@@ -521,7 +575,10 @@ const BA_ITEMS = Object.entries(BA_GLOB)
     <h2 class="text-2xl font-semibold text-slate-900">Frequently Asked Questions</h2>
     <p class="mt-2 max-w-3xl text-slate-700">
       Quick answers about safety, results, timing, and sensitivity. Still curious?
-      <a href={`sms:${SITE.sms}`} class="font-semibold text-emerald-700 hover:text-emerald-800">Text us any question →</a>
+      <!-- UPDATED: replace text link with dual call links -->
+      <a href={`tel:${SPRINGS.phone}`} class="font-semibold text-emerald-700 hover:text-emerald-800">Call {SPRINGS.label}</a>
+      <span> or </span>
+      <a href={`tel:${LONE.phone}`} class="font-semibold text-emerald-700 hover:text-emerald-800">Call {LONE.label}</a>
     </p>
 
     <div class="mt-6 space-y-3">
@@ -551,7 +608,7 @@ const BA_ITEMS = Object.entries(BA_GLOB)
           <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"/></svg>
         </summary>
         <div class="px-5 pb-5 text-slate-700">
-          Yes, the DaVinci whitening gel formulation is an organic plant and mineral based product with built in enamel building qualities. Scientific research has shown that the active ingredients in the DaVinci Teeth Whitening Gels are safe and effective. Our whitening equipment is FDA approved and has been used throughout the dental and cosmetic community for years. DaVinci Teeth Whitening does not change or damage the structure of the teeth; it merely lifts and removes the stains, making your teeth whiter.
+          Yes, the DaVinci whitening gel formulation is an organic plant and mineral based product with built in enamel building qualities. Scientific research has shown that the active ingredients in the DaVinci Teeth Whitening Gels are safe and effective. Our whitening equipment is FDA approved and has been used throughout the dental and cosmetic community for years. DaVinci Teeth Whitening does not change or damage the structure of the teeth; it merely lifts and removes common stains from coffee, tea, red wine, dark sodas, dark foods, and smoking or chewing tobacco, making your teeth whiter.
         </div>
       </details>
 
@@ -611,7 +668,7 @@ const BA_ITEMS = Object.entries(BA_GLOB)
           <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"/></svg>
         </summary>
         <div class="px-5 pb-5 text-slate-700">
-          The DaVinci Teeth Whitening treatment provides dramatic results for anyone who wants to whiten their teeth. This includes people with teeth that have been stained by smoking or by substances such as coffee, tea, soda, wine, and other consumable items. We also see great results on people with teeth stained by tetracycline, fluoride, and hereditary discoloration.
+          The DaVinci Teeth Whitening treatment provides dramatic results for anyone who wants to whiten their teeth. This includes people with teeth that have been stained by smoking, chewing tobacco, or by substances such as coffee, tea, red wine, dark sodas, dark foods, and other consumable items. We also see great results for teeth stained by fluoride, tetracycline, and hereditary discoloration. Although fluoride and tetracycline stains cannot be removed completely, we typically see significantly great results.
         </div>
       </details>
     </div>
@@ -622,60 +679,83 @@ const BA_ITEMS = Object.entries(BA_GLOB)
         "@context":"https://schema.org",
         "@type":"FAQPage",
         "mainEntity":[
-          {"@type":"Question","name":"How white will my teeth get?","acceptedAnswer":{"@type":"Answer","text":"After undergoing whitening with the DaVinci Teeth Whitening System, teeth shades will brighten up to 14 shades, with an average improvement of five to eight shades with each 20 minute session. Individual results will depend on your current tooth shade, treatment time, and the composition of your teeth. Your end result will be a whiter, healthier smile. Everyone's teeth are different and will have a natural stop point. We recommend a 60 minute session for optimal results and to remove all layers of staining."}},
-          {"@type":"Question","name":"How long will the whitening last?","acceptedAnswer":{"@type":"Answer","text":"This varies from person to person and depends on your diet and lifestyle. However, with proper maintenance and periodic touch-up treatments, you can keep your smile looking great for a lifetime."}},
-          {"@type":"Question","name":"Is Da Vinci Teeth Whitening safe?","acceptedAnswer":{"@type":"Answer","text":"Yes, the DaVinci whitening gel formulation is an organic plant and mineral based product with built in enamel building qualities. Scientific research has shown that the active ingredients in the DaVinci Teeth Whitening Gels are safe and effective. Our whitening equipment is FDA approved and has been used throughout the dental and cosmetic community for years. DaVinci Teeth Whitening does not change or damage the structure of the teeth; it merely lifts and removes the stains, making your teeth whiter."}},
-          {"@type":"Question","name":"How long does the treatment take?","acceptedAnswer":{"@type":"Answer","text":"Treatment times are 20 to 60 minutes depending on the discoloration of your teeth and how white you want them. It takes no longer than the time it would for you to have a haircut or a facial — it is that simple!"}},
-          {"@type":"Question","name":"What is the difference?","acceptedAnswer":{"@type":"Answer","text":"The DaVinci teeth whitening system uses the latest LED cold laser technology and our signature whitening gel consisting of natural plant and mineral ingredients. Our system has proven to yield superior results with little to no sensitivity when compared to other whitening systems."}},
-          {"@type":"Question","name":"Does it hurt?","acceptedAnswer":{"@type":"Answer","text":"No, because our signature laser gel is all natural the treatment does not hurt and most clients experience no sensitivity. A very small percentage of clients may feel some tooth sensitivity, especially if they are dehydrated or consume very cold/hot foods or drinks within two hours after the whitening session. Any sensitivity is short term and gone within 24–48 hours. We do offer solutions for those that are concerned about sensitivity."}},
-          {"@type":"Question","name":"Will DaVinci Teeth Whitening work on crowns and fillings?","acceptedAnswer":{"@type":"Answer","text":"Yes, DaVinci teeth whitening will remove staining from existing dental work and take it back to the original color. Our goal is to clean up the existing dental work and whiten the natural teeth to match for a nice even smile. We cannot whiten them beyond the original color of the material used at the time of placement. If your existing dental work is not in your smile line it won’t matter either way because it is not visible."}},
-          {"@type":"Question","name":"Should I consider DaVinci Teeth Whitening?","acceptedAnswer":{"@type":"Answer","text":"Studies have shown that people with whiter teeth look younger and there is a correlation between high self-esteem and a bright, confident smile. DaVinci Teeth Whitening is a great way to instantly enhance your appearance."}},
-          {"@type":"Question","name":"Is DaVinci Teeth Whitening treatment for everyone?","acceptedAnswer":{"@type":"Answer","text":"The DaVinci Teeth Whitening treatment provides dramatic results for anyone who wants to whiten their teeth. This includes people with teeth that have been stained by smoking or by substances such as coffee, tea, soda, wine, and other consumable items. We also see great results on people with teeth stained by tetracycline, fluoride, and hereditary discoloration."}}
+          {
+            "@type":"Question",
+            "name":"How white will my teeth get?",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"After undergoing whitening with the DaVinci Teeth Whitening System, teeth shades will brighten up to 14 shades, with an average improvement of five to eight shades with each 20 minute session. Individual results will depend on your current tooth shade, treatment time, and the composition of your teeth. Your end result will be a whiter, healthier smile. Everyone's teeth are different and will have a natural stop point. We recommend a 60 minute session for optimal results and to remove all layers of staining."
+            }
+          },
+          {
+            "@type":"Question",
+            "name":"How long will the whitening last?",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"This varies from person to person and depends on your diet and lifestyle. However, with proper maintenance and periodic touch-up treatments, you can keep your smile looking great for a lifetime."
+            }
+          },
+          {
+            "@type":"Question",
+            "name":"Is Da Vinci Teeth Whitening safe?",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"Yes, the DaVinci whitening gel formulation is an organic plant and mineral based product with built in enamel building qualities. Scientific research has shown that the active ingredients in the DaVinci Teeth Whitening Gels are safe and effective. Our whitening equipment is FDA approved and has been used throughout the dental and cosmetic community for years. DaVinci Teeth Whitening does not change or damage the structure of the teeth; it merely lifts and removes common stains from coffee, tea, red wine, dark sodas, dark foods, and smoking or chewing tobacco, making your teeth whiter."
+            }
+          },
+          {
+            "@type":"Question",
+            "name":"How long does the treatment take?",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"Treatment times are 20 to 60 minutes depending on the discoloration of your teeth and how white you want them. It takes no longer than the time it would for you to have a haircut or a facial — it is that simple!"
+            }
+          },
+          {
+            "@type":"Question",
+            "name":"What is the difference?",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"The DaVinci teeth whitening system uses the latest LED cold laser technology and our signature whitening gel consisting of natural plant and mineral ingredients. Our system has proven to yield superior results with little to no sensitivity when compared to other whitening systems."
+            }
+          },
+          {
+            "@type":"Question",
+            "name":"Does it hurt?",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"No, because our signature laser gel is all natural the treatment does not hurt and most clients experience no sensitivity. A very small percentage of clients may feel some tooth sensitivity, especially if they are dehydrated or consume very cold/hot foods or drinks within two hours after the whitening session. Any sensitivity is short term and gone within 24–48 hours. We do offer solutions for those that are concerned about sensitivity."
+            }
+          },
+          {
+            "@type":"Question",
+            "name":"Will DaVinci Teeth Whitening work on crowns and fillings?",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"Yes, DaVinci teeth whitening will remove staining from existing dental work and take it back to the original color. Our goal is to clean up the existing dental work and whiten the natural teeth to match for a nice even smile. We cannot whiten them beyond the original color of the material used at the time of placement. If your existing dental work is not in your smile line it won’t matter either way because it is not visible."
+            }
+          },
+          {
+            "@type":"Question",
+            "name":"Should I consider DaVinci Teeth Whitening?",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"Studies have shown that people with whiter teeth look younger and there is a correlation between high self-esteem and a bright, confident smile. DaVinci Teeth Whitening is a great way to instantly enhance your appearance."
+            }
+          },
+          {
+            "@type":"Question",
+            "name":"Is DaVinci Teeth Whitening treatment for everyone?",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"The DaVinci Teeth Whitening treatment provides dramatic results for anyone who wants to whiten their teeth. This includes people with teeth that have been stained by smoking, chewing tobacco, or by substances such as coffee, tea, red wine, dark sodas, dark foods, and other consumable items. We also see great results for teeth stained by fluoride, tetracycline, and hereditary discoloration. Although fluoride and tetracycline stains cannot be removed completely, we typically see significantly great results."
+            }
+          }
         ]
       }
     </script>
   </section>
 
-  <!-- LOCATIONS + CTA -->
-  <section
-    class="mx-auto mt-16 max-w-7xl rounded-2xl bg-slate-50 px-4 py-8 ring-1 ring-slate-200"
-  >
-    <div class="grid gap-6 md:grid-cols-3">
-      <div class="flex items-center gap-3">
-        <div class="h-10 w-10 overflow-hidden rounded">
-          <Image src={logoDark} alt="DaVinci Radiance mark" widths={[40]} class="h-10 w-10" />
-        </div>
-        <div>
-          <div class="font-semibold text-slate-900">Two Colorado Locations</div>
-          <div class="text-sm text-slate-600">Lone Tree & Colorado Springs</div>
-        </div>
-      </div>
-      <ul class="space-y-3 text-sm text-slate-700">
-        {SITE.locations.map((loc) => (
-          <li class="rounded-lg border border-slate-200 p-3">
-            <div class="font-medium">{loc.label}</div>
-            <div class="text-slate-600">{loc.street}</div>
-            <div class="text-slate-600">
-              {loc.city}, {loc.region} {loc.postal}
-            </div>
-          </li>
-        ))}
-      </ul>
-      <div class="grid content-start gap-3">
-        <a
-          href={`tel:${SITE.phone}`}
-          class="rounded-lg bg-emerald-600 px-5 py-3 text-center font-semibold text-white shadow-sm hover:bg-emerald-700"
-          >Call Now</a
-        >
-        <a
-          href={`sms:${SITE.sms}`}
-          class="rounded-lg border border-emerald-600 px-5 py-3 text-center font-semibold text-emerald-700 hover:bg-emerald-50"
-          >Text Us Today</a
-        >
-      </div>
-    </div>
-  </section>
-
-  <!-- Spacer for mobile sticky CTA -->
+  <!-- Spacer for mobile sticky CTA (if used elsewhere) -->
   <div class="h-24 md:hidden"></div>
 </Base>

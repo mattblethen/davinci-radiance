@@ -1,0 +1,322 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE } from "../config/site";
+import { Image } from "astro:assets";
+
+// Images (temporary stand-ins you’ll replace later)
+import heroAlt from "../assets/images/IMG_6743.JPG";
+import stepImg1 from "../assets/images/InSession.jpeg";
+import stepImg2 from "../assets/images/InSession2.jpeg";
+import resultImg from "../assets/images/ba/2.jpg";
+import logoDark from "../assets/images/logo.png";
+// NEW: After-care kit photo
+// If your file is in a different folder, adjust the path accordingly.
+import kitImg from "../assets/images/kit.jpg";
+
+const PAGE = {
+  title: "How Whitening Works — DaVinci Radiance",
+  description:
+    "See how DaVinci Radiance teeth whitening works in 3 simple steps. What to expect, timing, sensitivity, and after-care — explained for first-timers.",
+};
+
+// TS-safe primary/secondary locations (prioritize Colorado Springs)
+const SPRINGS = (
+  SITE.locations.find((l) => l.label === "North Colorado Springs") ??
+  SITE.locations[0]
+)!;
+
+const LONE = (
+  SITE.locations.find((l) => l.label === "Lone Tree") ??
+  SITE.locations.find((l) => l !== SPRINGS) ??
+  SITE.locations[1] ??
+  SITE.locations[0]
+)!;
+
+// Schema (kept consistent with site)
+const schemaLocal = SITE.locations.map((loc) => ({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: `${SITE.name} — ${loc.label}`,
+  image: new URL("/favicon.svg", SITE.url).toString(),
+  url: SITE.url,
+  telephone: loc.phone,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: loc.street,
+    addressLocality: loc.city,
+    addressRegion: loc.region,
+    postalCode: loc.postal,
+    addressCountry: "US",
+  },
+  areaServed: "Colorado, USA",
+  sameAs: Object.values(SITE.social).filter(Boolean),
+}));
+---
+
+<Base title={PAGE.title} description={PAGE.description} schema={schemaLocal}>
+
+  <!-- HERO -->
+  <section class="relative mx-auto max-w-7xl px-4 pt-8 md:pt-12">
+    <div class="grid items-center gap-8 md:grid-cols-2">
+      <div class="max-w-[600px]">
+        <h1 class="text-pretty text-3xl/tight font-semibold text-slate-900 sm:text-4xl md:text-5xl">
+          Whitening in 3 Simple Steps
+        </h1>
+        <p class="mt-4 text-slate-600">
+          First time? Here’s exactly what happens at DaVinci Radiance. Our enamel-friendly, plant &amp; mineral-based gel
+          works with a blue LED light to lift everyday stains comfortably and efficiently.
+        </p>
+
+        <!-- UPDATED: dual call buttons (no text) -->
+        <div class="mt-6 grid gap-3 sm:flex sm:flex-wrap">
+          <a
+            href={`tel:${SPRINGS.phone}`}
+            class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white shadow-sm hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+          >
+            Call {SPRINGS.label} Location
+          </a>
+          <a
+            href={`tel:${LONE.phone}`}
+            class="inline-flex items-center justify-center rounded-lg border border-emerald-600 px-5 py-3 font-semibold text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+          >
+            Call {LONE.label} Location
+          </a>
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-700">
+          <div class="inline-flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            FDA Approved Equipment
+          </div>
+          <div class="inline-flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            Plant &amp; Mineral Based Gel
+          </div>
+          <div class="inline-flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            Sensitivity-Conscious
+          </div>
+          <div class="inline-flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            Immediate, Visible Results
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5">
+        <Image
+          src={heroAlt}
+          alt="Client smiling outdoors after whitening"
+          widths={[480, 768, 1024, 1280]}
+          sizes="(max-width: 768px) 100vw, 48rem"
+          loading="eager"
+          decoding="async"
+          class="block"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="mt-16 bg-slate-50/70 py-12 ring-1 ring-slate-200/60">
+    <div class="mx-auto grid max-w-7xl items-center gap-10 px-4 md:grid-cols-2">
+      <div class="max-w-[560px]">
+        <h2 class="text-2xl font-semibold text-slate-900">Step 1 — Apply</h2>
+        <p class="mt-3 text-slate-700">
+          We begin by reviewing your goals and shade, then gently prep your smile. A professional whitening gel is applied
+          to both arches while lips and gums are protected. You can relax while everything is positioned comfortably.
+        </p>
+      </div>
+
+      <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+        <Image
+          src={stepImg1}
+          alt="Whitening gel and protection in place before LED activation"
+          widths={[480, 768, 1152]}
+          sizes="(max-width: 768px) 100vw, 42rem"
+          loading="lazy"
+          decoding="async"
+          class="block"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="mx-auto mt-12 max-w-7xl px-4">
+    <div class="grid items-center gap-10 md:grid-cols-2">
+      <div class="order-2 md:order-1 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+        <Image
+          src={stepImg2}
+          alt="LED light positioned to activate whitening gel"
+          widths={[480, 768, 1152]}
+          sizes="(max-width: 768px) 100vw, 42rem"
+          loading="lazy"
+          decoding="async"
+          class="block"
+        />
+      </div>
+
+      <div class="order-1 md:order-2 max-w-[560px]">
+        <h2 class="text-2xl font-semibold text-slate-900">Step 2 — Light</h2>
+        <p class="mt-3 text-slate-700">
+          A cool blue LED light is positioned over the teeth to help accelerate whitening. You’ll complete short,
+          comfortable light cycles while relaxing in the chair — many people even nap!
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 3 (Before & After visual) -->
+  <section class="mt-16 bg-slate-50/70 py-12 ring-1 ring-slate-200/60">
+    <div class="mx-auto grid max-w-7xl items-start gap-10 px-4 md:grid-cols-2">
+      <div class="max-w-[560px]">
+        <h2 class="text-2xl font-semibold text-slate-900">Step 3 — White</h2>
+        <p class="mt-3 text-slate-700">
+          Once your final light cycle is finished, we reveal your results side-by-side with your starting shade.
+          Most clients notice an instant, visible difference — a cleaner, brighter smile in less than an hour.
+        </p>
+
+        <div class="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 class="font-semibold text-slate-900">Timing &amp; Results</h3>
+          <p class="mt-2 text-slate-700">
+            Appointments typically take <strong>15 – 45 minutes</strong> of active whitening. Many clients see
+            an average improvement of <strong>4 – 14 shades</strong> depending on starting color, tooth makeup,
+            and session length. Individual results vary.
+          </p>
+        </div>
+      </div>
+
+      <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+        <Image
+          src={resultImg}
+          alt="Real DaVinci Radiance before and after result"
+          widths={[640, 768, 1024, 1280]}
+          sizes="(max-width: 768px) 100vw, 42rem"
+          loading="lazy"
+          decoding="async"
+          class="block object-contain bg-slate-50"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- AFTER-CARE -->
+  <section class="mx-auto mt-16 max-w-7xl px-4">
+    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 class="text-2xl font-semibold text-slate-900">After-Care: Keep Your Smile Bright</h2>
+
+      <div class="mt-3 grid gap-8 md:grid-cols-2 md:items-start">
+        <div>
+          <ul class="grid gap-3 text-slate-700">
+  <li>• Avoid deeply colored foods/drinks for a short time after your session.</li>
+  <li>• Maintain daily brushing and hydration for long-lasting brightness.</li>
+  <li>
+    • Touch-ups every few months help offset stains from coffee, tea, red wine, dark sodas,
+    dark foods, and smoking or chewing tobacco.
+  </li>
+  <li>
+    • Although fluoride and tetracycline stains cannot be removed completely, we typically
+    see significantly great results and noticeable brightening.
+  </li>
+  <li>• Ask about sensitivity or at-home maintenance recommendations.</li>
+</ul>
+
+
+          <p class="mt-4 text-slate-700">
+            We also offer take-home and add-on options to protect and extend your results —
+            including TrueMinerals desensitizing treatment, Shield Shimmer sealant, and our
+            On-The-Go whitening pen. <strong>These products are available at the time of service.</strong>
+          </p>
+
+          <!-- UPDATED: dual call buttons (no text) -->
+          <div class="mt-5 grid gap-3 sm:flex sm:flex-wrap">
+            <a
+              href={`tel:${SPRINGS.phone}`}
+              class="rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white shadow-sm hover:bg-emerald-700"
+            >
+              Call {SPRINGS.label} Location
+            </a>
+            <a
+              href={`tel:${LONE.phone}`}
+              class="rounded-lg border border-emerald-600 px-5 py-3 font-semibold text-emerald-700 hover:bg-emerald-50"
+            >
+              Call {LONE.label} Location
+            </a>
+          </div>
+        </div>
+
+        <div class="overflow-hidden rounded-xl ring-1 ring-black/5">
+          <Image
+            src={kitImg}
+            alt="DaVinci after-care kit: TrueMinerals, Shield Shimmer, and whitening pen"
+            widths={[480, 768, 1024, 1280]}
+            sizes="(max-width: 768px) 100vw, 36rem"
+            loading="lazy"
+            decoding="async"
+            class="block bg-slate-50"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATIONS (with Directions buttons) -->
+  <section
+    class="mx-auto mt-10 max-w-7xl rounded-2xl bg-slate-50 px-4 py-8 ring-1 ring-slate-200"
+  >
+    <div class="flex items-center gap-3 pb-4">
+      <div class="h-10 w-10 overflow-hidden rounded">
+        <Image src={logoDark} alt="DaVinci Radiance mark" widths={[40]} class="h-10 w-10" />
+      </div>
+      <div>
+        <div class="font-semibold text-slate-900">Two Colorado Locations</div>
+        <div class="text-sm text-slate-600">Colorado Springs & Lone Tree</div>
+      </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      {SITE.locations.map((loc) => {
+        const mapsQuery = encodeURIComponent(
+          `${loc.street}, ${loc.city}, ${loc.region} ${loc.postal}`
+        );
+        const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+
+        return (
+          <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div class="font-semibold text-slate-900">{loc.label}</div>
+            <div class="mt-1 text-slate-600">{loc.street}</div>
+            <div class="text-slate-600">
+              {loc.city}, {loc.region} {loc.postal}
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-3">
+              <a
+                href={`tel:${loc.phone}`}
+                class="rounded-lg bg-emerald-600 px-4 py-2.5 font-semibold text-white shadow-sm hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+              >
+                Call {loc.phoneHuman}
+              </a>
+              <a
+                href={`sms:${loc.phone}`}
+                class="rounded-lg border border-emerald-600 px-4 py-2.5 font-semibold text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+              >
+                Text {loc.phoneHuman}
+              </a>
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener"
+                class="rounded-lg border border-slate-300 px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+              >
+                Directions
+              </a>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+
+  <div class="h-24 md:hidden"></div>
+</Base>

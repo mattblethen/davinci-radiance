@@ -1,11 +1,24 @@
 ---
 // src/components/Footer.astro
 import { SITE } from "../config/site";
+import { Icon } from "astro-icon/components";
 const year = new Date().getFullYear();
+
+// Safely resolve primary and secondary locations (with TS-safe fallback)
+const SPRINGS = (
+  SITE.locations.find((l) => l.label === "North Colorado Springs") ??
+  SITE.locations[0]
+)!;
+
+const LONE = (
+  SITE.locations.find((l) => l.label === "Lone Tree") ??
+  SITE.locations.find((l) => l !== SPRINGS) ??
+  SITE.locations[1] ??
+  SITE.locations[0]
+)!;
 ---
 
 <footer class="mt-16 bg-slate-900 text-slate-200 pb-24 md:pb-0">
-
   <div class="mx-auto max-w-7xl px-4 lg:px-8 py-12">
     <div class="grid gap-10 md:grid-cols-3">
       <!-- Brand & Mission -->
@@ -15,7 +28,6 @@ const year = new Date().getFullYear();
           Plant & mineral-based teeth whitening. Safe, fast, and confidence-boosting results.
         </p>
         <div class="mt-4 flex items-center gap-3">
-          <!-- socials (replace hrefs in site config) -->
           <a href={SITE.social.facebook} aria-label="Facebook" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7.5c0-1.1.3-1.8 1.9-1.8H17V2.2C16.2 2.1 15.3 2 14.2 2c-3 0-5.1 1.8-5.1 5.2V10H6v4h3v8h4z"/></svg>
           </a>
@@ -34,7 +46,10 @@ const year = new Date().getFullYear();
             <div class="mt-1 text-sm text-slate-400">{loc.street}</div>
             <div class="text-sm text-slate-400">{loc.city}, {loc.region} {loc.postal}</div>
             <a href={`tel:${loc.phone}`} class="mt-2 inline-flex items-center gap-2 text-emerald-300 hover:text-emerald-200">
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 5.5A2.5 2.5 0 0 1 4.5 3H6a1 1 0 0 1 1 .9 15.9 15.9 0 0 0 1.2 4.2 1 1 0 0 1-.23 1.1l-1.3 1.3a14.5 14.5 0 0 0 6.7 6.7l1.3-1.3a1 1 0 0 1 1.1-.23 15.9 15.9 0 0 0 4.2 1.2 1 1 0 0 1 .9 1v1.5A2.5 2.5 0 0 1 18.5 22h-1A15.5 15.5 0 0 1 2 6.5v-1z"/></svg>
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M2 5.5A2.5 2.5 0 0 1 4.5 3H6a1 1 0 0 1 1 .9 15.9 15.9 0 0 0 1.2 4.2 1 1 0 0 1-.23 1.1l-1.3 1.3a14.5 14.5 0 0 0 6.7 6.7l1.3-1.3a1 1 0 0 1 1.1-.23 15.9 15.9 0 0 0 4.2 1.2 1 1 0 0 1 .9 1v1.5A2.5 2.5 0 0 1 18.5 22h-1A15.5 15.5 0 0 1 2 6.5v-1z"/>
+              </svg>
               <span>{loc.phoneHuman}</span>
             </a>
           </div>
@@ -44,18 +59,84 @@ const year = new Date().getFullYear();
       <!-- Quick actions -->
       <div>
         <div class="text-sm font-semibold uppercase tracking-wide text-slate-400">Schedule</div>
-        <div class="mt-4 grid grid-cols-2 gap-3 max-w-sm">
-          <a href={`tel:${SITE.phone}`} class="rounded-lg bg-emerald-600 px-4 py-2 text-center font-semibold text-white hover:bg-emerald-700">Call</a>
-          <a href={`sms:${SITE.sms}`} class="rounded-lg border border-emerald-500 px-4 py-2 text-center font-semibold text-emerald-300 hover:bg-slate-800">Text</a>
+        <div class="mt-4 grid grid-cols-1 gap-3 max-w-sm">
+          <a href={`tel:${SPRINGS.phone}`} class="rounded-lg bg-emerald-600 px-4 py-2 text-center font-semibold text-white hover:bg-emerald-700">
+            Call {SPRINGS.label} Location
+          </a>
+          <a href={`tel:${LONE.phone}`} class="rounded-lg border border-emerald-500 px-4 py-2 text-center font-semibold text-emerald-300 hover:bg-slate-800">
+            Call {LONE.label} Location
+          </a>
         </div>
         <div class="mt-4 text-sm text-slate-400">
-          <div>Mon–Sat • By Appointment</div>
-          <div><a href={`mailto:${SITE.email}`} class="hover:text-slate-300">{SITE.email}</a></div>
+          <div>
+            <a href={`mailto:${SITE.email}`} class="hover:text-slate-300">{SITE.email}</a>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="mt-10 border-t border-slate-800 pt-6 text-xs text-slate-500">
+        <!-- Payment methods strip -->
+    <div class="mt-10 border-t border-slate-800 pt-6 bg-white" style="padding:1rem; text-align:center; border-radius:1rem; color:#000;">
+      <div class="text-xs font-semibold uppercase tracking-wide">
+        Payment Methods Accepted In Studio
+      </div>
+
+      <div
+        class="mt-4 flex flex-wrap items-center gap-5 text-[0.75rem] text-slate-200"
+        style="justify-content:center;"
+      >
+        <!-- Major cards (full-color logos via Iconify) -->
+        <span class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5">
+          <Icon
+            name="logos:visa"
+            class="h-6 w-auto md:h-8"
+            aria-hidden="true"
+          />
+          
+        </span>
+
+        <span class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5">
+          <Icon
+            name="logos:mastercard"
+            class="h-6 w-auto md:h-8"
+            aria-hidden="true"
+          />
+          
+        </span>
+
+        
+
+        <span class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5">
+          <Icon
+            name="logos:discover"
+            class="h-6 w-auto md:h-8"
+            aria-hidden="true"
+          />
+          
+        </span>
+
+        <!-- Tap to pay / NFC -->
+        <span class="inline-flex items-center gap-2 rounded-full bg-black px-3 py-1.5">
+          <Icon
+            name="mdi:nfc-variant"
+            class="h-6 w-auto md:h-8"
+            aria-hidden="true"
+          />
+          <span>Tap&nbsp;to&nbsp;Pay</span>
+        </span>
+
+        <!-- HSA / FSA -->
+        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-700/90 px-3 py-1.5">
+          <span class="text-xs md:text-sm font-semibold" style="padding:0.4rem;">
+            HSA &amp; FSA cards accepted
+          </span>
+        </span>
+      </div>
+    </div>
+
+
+
+    <div class="mt-6 text-xs text-slate-500">
       <p>
         Teeth have a natural stopping point; individual results vary. Whitening does not change or damage tooth structure and
         results may be less effective on damaged enamel or intrinsic discoloration. If you’re not pleased with your results,

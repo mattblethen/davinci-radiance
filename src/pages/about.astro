@@ -1,0 +1,274 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE } from "../config/site";
+import { Image } from "astro:assets";
+
+// Images (you'll replace later; filenames match your assets folder)
+import smilesImg from "../assets/images/Davinci Corporate image.jpeg";
+import sessionImg from "../assets/images/InSession2.jpeg";
+import logoDark from "../assets/images/logo.png";
+
+const PAGE = {
+  title: "About — DaVinci Radiance",
+  description:
+    "Learn about DaVinci Radiance: professional, enamel-friendly teeth whitening in Colorado with real, visible results.",
+};
+
+// TS-safe primary/secondary locations (prioritize Colorado Springs)
+const SPRINGS = (
+  SITE.locations.find((l) => l.label === "North Colorado Springs") ??
+  SITE.locations[0]
+)!;
+
+const LONE = (
+  SITE.locations.find((l) => l.label === "Lone Tree") ??
+  SITE.locations.find((l) => l !== SPRINGS) ??
+  SITE.locations[1] ??
+  SITE.locations[0]
+)!;
+
+// LocalBusiness schema (consistent with index)
+const schemaLocal = SITE.locations.map((loc) => ({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: `${SITE.name} — ${loc.label}`,
+  image: new URL("/favicon.svg", SITE.url).toString(),
+  url: SITE.url,
+  telephone: loc.phone,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: loc.street,
+    addressLocality: loc.city,
+    addressRegion: loc.region,
+    postalCode: loc.postal,
+    addressCountry: "US",
+  },
+  areaServed: "Colorado, USA",
+  sameAs: Object.values(SITE.social).filter(Boolean),
+}));
+---
+
+<Base title={PAGE.title} description={PAGE.description} schema={schemaLocal}>
+  
+  <!-- HERO/INTRO (mirrors index grid rhythm) -->
+  <section class="relative mx-auto max-w-7xl px-4 pt-8 md:pt-12">
+    <div class="grid items-center gap-8 md:grid-cols-2">
+      <div class="max-w-[600px]">
+        <h1 class="text-pretty text-3xl/tight font-semibold text-slate-900 sm:text-4xl md:text-5xl">
+          About DaVinci Radiance
+        </h1>
+        <p class="mt-4 text-slate-600">
+          We make professional teeth whitening simple, comfortable, and consistent. Our
+          plant &amp; mineral-based system is enamel friendly and designed to help reduce
+          sensitivity for most clients—so you get visible results without the drama.
+        </p>
+
+        <!-- UPDATED: dual call buttons (no text) -->
+        <div class="mt-6 grid gap-3 sm:flex sm:flex-wrap">
+          <a
+            href={`tel:${SPRINGS.phone}`}
+            class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white shadow-sm hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+          >
+            Call {SPRINGS.label} Location
+          </a>
+          <a
+            href={`tel:${LONE.phone}`}
+            class="inline-flex items-center justify-center rounded-lg border border-emerald-600 px-5 py-3 font-semibold text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+          >
+            Call {LONE.label} Location
+          </a>
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-700">
+          <div class="inline-flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            FDA Approved Equipment
+          </div>
+          <div class="inline-flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            Plant &amp; Mineral Based Gel
+          </div>
+          <div class="inline-flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            Sensitivity-Conscious Approach
+          </div>
+          <div class="inline-flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            Locally Owned in Colorado
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5">
+        <Image
+          src={smilesImg}
+          alt="Smiling clients after a whitening session"
+          widths={[480, 768, 1024, 1280]}
+          sizes="(max-width: 768px) 100vw, 48rem"
+          loading="eager"
+          decoding="async"
+          class="block"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE & TRUST BAND (same component style as index) -->
+  <section class="mx-auto mt-6 max-w-7xl px-4">
+    <div class="grid gap-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200 sm:grid-cols-3">
+      <div class="flex items-center gap-3 rounded-lg bg-emerald-50/60 p-3 ring-1 ring-emerald-100">
+        <div class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white font-semibold">14</div>
+        <div class="text-sm">
+          <div class="font-semibold text-slate-900">Years of Experience</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 rounded-lg bg-emerald-50/60 p-3 ring-1 ring-emerald-100">
+        <div class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white font-semibold">∞</div>
+        <div class="text-sm">
+          <div class="font-semibold text-slate-900">Thousands of Clients Teeth Whitened Each Year</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 rounded-lg bg-emerald-50/60 p-3 ring-1 ring-emerald-100">
+        <div class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white font-semibold">★</div>
+        <div class="text-sm">
+          <div class="font-semibold text-slate-900">Top-Rated Service</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR APPROACH -->
+  <section class="mt-16 bg-slate-50/70 py-12 ring-1 ring-slate-200/60">
+    <div class="mx-auto grid max-w-7xl items-center gap-10 px-4 md:grid-cols-2">
+      <div class="max-w-[560px]">
+        <h2 class="text-2xl font-semibold text-slate-900">Our Approach</h2>
+        <p class="mt-3 text-slate-700">
+          Every smile is different, so we set clear expectations up front. We’ll talk
+          through your shade goals, any sensitivity history, and timing for events or photos.
+          Then we tailor session length and after-care to help you meet those goals.
+        </p>
+
+        <ol class="mt-5 space-y-4 text-slate-700">
+          <li class="flex gap-3">
+            <span class="mt-0.5 inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-emerald-100 font-semibold text-emerald-800 ring-1 ring-emerald-200">1</span>
+            <span>Consultation &amp; shade assessment</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-0.5 inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-emerald-100 font-semibold text-emerald-800 ring-1 ring-emerald-200">2</span>
+            <span>Protective prep, gel application, and LED activation</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-0.5 inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-emerald-100 font-semibold text-emerald-800 ring-1 ring-emerald-200">3</span>
+            <span>Post-care guidance to help maintain your results</span>
+          </li>
+        </ol>
+
+        <!-- UPDATED: dual call buttons (no text) -->
+        <div class="mt-6 grid gap-3 sm:flex sm:flex-wrap">
+          <a
+            href={`tel:${SPRINGS.phone}`}
+            class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white shadow-sm hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+          >
+            Call {SPRINGS.label} Location
+          </a>
+          <a
+            href={`tel:${LONE.phone}`}
+            class="inline-flex items-center justify-center rounded-lg border border-emerald-600 px-5 py-3 font-semibold text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+          >
+            Call {LONE.label} Location
+          </a>
+        </div>
+
+        <p class="mt-3 text-sm text-slate-600">
+          Results vary. Many clients notice a brighter smile after a single visit.
+        </p>
+      </div>
+
+      <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+        <Image
+          src={sessionImg}
+          alt="In-session DaVinci Radiance LED whitening"
+          widths={[480, 768, 1152]}
+          sizes="(max-width: 768px) 100vw, 42rem"
+          loading="lazy"
+          decoding="async"
+          class="block"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES BAND -->
+  <section class="mx-auto mt-16 max-w-7xl px-4">
+    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 class="text-2xl font-semibold text-slate-900">What We Stand For</h2>
+      <ul class="mt-4 grid gap-3 text-slate-700 sm:grid-cols-2">
+        <li>• Real, verifiable results — see our <a href="/results" class="underline decoration-slate-300 hover:decoration-slate-600">Results</a> page</li>
+        <li>• Enamel-friendly, sensitivity-conscious whitening</li>
+        <li>• Clear expectations, no filters or stock photos</li>
+        <li>• Friendly, professional care at Colorado locations</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- LOCATIONS (with Directions buttons) -->
+  <section
+    class="mx-auto mt-10 max-w-7xl rounded-2xl bg-slate-50 px-4 py-8 ring-1 ring-slate-200"
+  >
+    <div class="flex items-center gap-3 pb-4">
+      <div class="h-10 w-10 overflow-hidden rounded">
+        <Image src={logoDark} alt="DaVinci Radiance mark" widths={[40]} class="h-10 w-10" />
+      </div>
+      <div>
+        <div class="font-semibold text-slate-900">Two Colorado Locations</div>
+        <div class="text-sm text-slate-600">Colorado Springs & Lone Tree</div>
+      </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      {SITE.locations.map((loc) => {
+        const mapsQuery = encodeURIComponent(
+          `${loc.street}, ${loc.city}, ${loc.region} ${loc.postal}`
+        );
+        const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+
+        return (
+          <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div class="font-semibold text-slate-900">{loc.label}</div>
+            <div class="mt-1 text-slate-600">{loc.street}</div>
+            <div class="text-slate-600">
+              {loc.city}, {loc.region} {loc.postal}
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-3">
+              <a
+                href={`tel:${loc.phone}`}
+                class="rounded-lg bg-emerald-600 px-4 py-2.5 font-semibold text-white shadow-sm hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+              >
+                Call {loc.phoneHuman}
+              </a>
+              <a
+                href={`sms:${loc.phone}`}
+                class="rounded-lg border border-emerald-600 px-4 py-2.5 font-semibold text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+              >
+                Text {loc.phoneHuman}
+              </a>
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener"
+                class="rounded-lg border border-slate-300 px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+              >
+                Directions
+              </a>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+  <!-- Spacer for mobile sticky CTA parity -->
+  <div class="h-24 md:hidden"></div>
+</Base>

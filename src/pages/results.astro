@@ -60,9 +60,29 @@ const ITEMS = Object.entries(BA_GLOB)
     <header class="mb-6">
       <h1 class="text-3xl font-semibold text-slate-900">Results</h1>
       <p class="mt-2 text-slate-600">
-        Real DaVinci Radiance clients. Images are composite “Before / After” photos as labeled.
+        <b>Real DaVinci Radiance clients</b>. Images are “Before / After” photos as labeled.
       </p>
     </header>
+
+    {/* SEO text block — authenticity + clarity */}
+    <div class="mb-8 text-slate-700 leading-relaxed">
+      <p class="mb-3">
+        These before and after photos feature <strong>real customers</strong> who completed a professional
+        teeth whitening session with DaVinci Teeth Whitening technology. What you see are genuine, visible results —
+        no stock photography, filters, or digital touch-ups. Each image shows the same smile immediately
+        before treatment and after treatment so you can clearly compare shade improvement.
+      </p>
+      <p class="mb-3">
+        Our enamel-safe whitening system is designed to lift common stains from coffee, tea, wine, and everyday
+        life while helping minimize sensitivity for most clients compared to chemical based whiteners. Results vary from person to person, but many
+        people notice a brighter smile after a single visit. Browse the gallery to get a realistic sense of what
+        professional <strong>teeth whitening results</strong> can look like and imagine how your smile could look
+        after a session with DaVinci Radiance.
+      </p>
+      <p class="text-slate-600">
+        Have questions about shade goals or post-care? We’re happy to help you choose the right plan for your smile.
+      </p>
+    </div>
 
     {ITEMS.length === 0 ? (
       <div class="rounded-xl border border-slate-200 bg-white p-5 text-slate-600">
@@ -90,7 +110,8 @@ const ITEMS = Object.entries(BA_GLOB)
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 loading="lazy"
                 decoding="async"
-                class="h-56 md:h-64 w-full object-contain bg-slate-50"
+                style="padding:1rem;"
+                class="h-56 md:h-64 w-full object-contain bg-black"
               />
             </button>
           </figure>
@@ -104,29 +125,29 @@ const ITEMS = Object.entries(BA_GLOB)
   </section>
 
   <!-- Fullscreen modal for zoom/pinch -->
- <dialog id="ba-modal" class="m-0 p-0">
-  <button
-    type="button"
-    class="absolute right-4 top-4 z-10 rounded-md bg-white/90 px-3 py-1.5 text-sm font-semibold text-slate-900 ring-1 ring-slate-200 hover:bg-white"
-    data-close-modal
-  >Close</button>
+  <dialog id="ba-modal" class="m-0 p-0">
+    <button
+      type="button"
+      class="absolute right-4 top-4 z-10 rounded-md bg-white/90 px-3 py-1.5 text-sm font-semibold text-slate-900 ring-1 ring-slate-200 hover:bg-white"
+      data-close-modal
+    >Close</button>
 
-  <div class="flex h-[100dvh] w-[100vw] items-center justify-center p-2 sm:p-6">
-    <img id="ba-modal-img" alt="" class="max-h-full max-w-full object-contain" />
-  </div>
-</dialog>
+    <div class="flex h-[100dvh] w-[100vw] items-center justify-center p-2 sm:p-6 bg-black">
+      <img id="ba-modal-img" alt="" class="max-h-full max-w-full object-contain" />
+    </div>
+  </dialog>
 
-<style is:inline>
-  /* Make dialog truly full-screen */
-  :where(dialog)#ba-modal { margin: 0; padding: 0; border: 0; max-width: none; max-height: none; }
-  :where(dialog[open])#ba-modal { position: fixed; inset: 0; width: 100vw; height: 100dvh; }
+  <style is:inline>
+    /* Make dialog truly full-screen */
+    :where(dialog)#ba-modal { margin: 0; padding: 0; border: 0; max-width: none; max-height: none; }
+    :where(dialog[open])#ba-modal { position: fixed; inset: 0; width: 100vw; height: 100dvh; }
 
-  /* Use the native backdrop for the dark overlay */
-  #ba-modal::backdrop { background: rgba(0,0,0,0.95); }
+    /* Use the native backdrop for the dark overlay */
+    #ba-modal::backdrop { background: rgba(0,0,0,0.95); }
 
-  /* Prevent body scroll when modal is open (avoids right-edge gap from scrollbar) */
-  html:has(#ba-modal[open]) { overflow: hidden; }
-</style>
+    /* Prevent body scroll when modal is open (avoids right-edge gap from scrollbar) */
+    html:has(#ba-modal[open]) { overflow: hidden; }
+  </style>
 
   <script is:inline>
     const modal = document.getElementById('ba-modal');
@@ -144,8 +165,8 @@ const ITEMS = Object.entries(BA_GLOB)
     // Close behaviors
     modal?.addEventListener('click', (e) => { if (e.target === modal) modal.close(); });
     // Handle close button inside modal
-modal?.addEventListener('close', () => (modalImg.src = '')); // optional cleanup
-modal?.querySelector('[data-close-modal]')?.addEventListener('click', () => modal.close());
+    modal?.addEventListener('close', () => (modalImg.src = '')); // optional cleanup
+    modal?.querySelector('[data-close-modal]')?.addEventListener('click', () => modal.close());
 
     window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal?.open) modal.close(); });
   </script>

@@ -18,6 +18,9 @@
     "test:perf": "lhci autorun"
   },
   "dependencies": {
+    "@iconify-json/logos": "^1.2.10",
+    "@iconify-json/mdi": "^1.2.3",
+    "astro-icon": "^1.1.5",
     "schema-dts": "^1.1.5",
     "sharp": "^0.34.4"
   },

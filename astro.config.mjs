@@ -5,6 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
+import icon from 'astro-icon';
 
 export default defineConfig({
   // Needed so /api/* routes run on Vercel
@@ -24,7 +25,8 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [mdx(), sitemap()],
+  // Just use the icon integration with default options
+  integrations: [mdx(), sitemap(), icon()],
 
   // Vercel adapter v9 for Astro v5
   adapter: vercel()
