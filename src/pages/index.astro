@@ -11,19 +11,20 @@ import smilesImg from "../assets/images/Davinci Corporate image.jpeg";
 import session1 from "../assets/images/InSession.jpeg";
 import session2 from "../assets/images/IMG_6743.JPG";
 import logoDark from "../assets/images/logo.png";
+import kitImg from "../assets/images/kit.jpg";
+
+// Hand-selected reviews JSON
+import reviewsData from "../data/reviews.json";
 
 // Primary/secondary locations (TS-safe with fallbacks)
-const SPRINGS = (
-  SITE.locations.find((l) => l.label === "North Colorado Springs") ??
-  SITE.locations[0]
-)!;
+const SPRINGS = (SITE.locations.find(
+  (l) => l.label === "North Colorado Springs",
+) ?? SITE.locations[0])!;
 
-const LONE = (
-  SITE.locations.find((l) => l.label === "Lone Tree") ??
+const LONE = (SITE.locations.find((l) => l.label === "Lone Tree") ??
   SITE.locations.find((l) => l !== SPRINGS) ??
   SITE.locations[1] ??
-  SITE.locations[0]
-)!;
+  SITE.locations[0])!;
 
 // LocalBusiness schema
 const schemaLocal = SITE.locations.map((loc) => ({
@@ -52,29 +53,20 @@ const PAGE = {
     "Plant & mineral-based teeth whitening. Safe, fast, and less sensitivity than chemical based whiteners. Call or text today to schedule your session.",
 };
 
-// Load reviews from our API (4★+). Show up to 5 on the homepage.
-let reviews: any[] = [];
-let placeMeta: { rating?: number; user_ratings_total?: number } = {};
-try {
-  const apiUrl = new URL("/api/reviews.json", Astro.url).toString();
-  const r = await fetch(apiUrl);
-  const data = await r.json();
-  reviews = (data?.reviews ?? []).slice(0, 5);
-  placeMeta = {
-    rating: data?.rating,
-    user_ratings_total: data?.user_ratings_total,
-  };
-} catch (_) {}
+// Use hand-selected reviews from JSON (show up to 5)
+const reviews = (reviewsData.reviews ?? []).slice(0, 9);
+const placeMeta = {
+  rating: reviewsData.rating,
+  user_ratings_total: reviewsData.user_ratings_total,
+};
 
 // Build a direct Google Maps link to the Business Profile using Place ID.
 const PLACE_ID =
-  (SITE as any)?.googlePlaceId ??
-  import.meta.env.GOOGLE_PLACE_ID ??
-  null;
+  (SITE as any)?.googlePlaceId ?? import.meta.env.GOOGLE_PLACE_ID ?? null;
 
 const GOOGLE_REVIEWS_URL = PLACE_ID
   ? `https://search.google.com/local/reviews?placeid=${PLACE_ID}`
-  : "#";
+  : reviewsData.url || "#";
 
 /** -------------------------------------------
  * BEFORE/AFTER GALLERY (single composite images)
@@ -84,7 +76,7 @@ const GOOGLE_REVIEWS_URL = PLACE_ID
  * ------------------------------------------ */
 const BA_GLOB = import.meta.glob<{ default: ImageMetadata }>(
   "../assets/images/ba/*.{jpg,jpeg,png,webp,avif}",
-  { eager: true }
+  { eager: true },
 );
 
 const BA_ITEMS = Object.entries(BA_GLOB)
@@ -106,7 +98,9 @@ const BA_ITEMS = Object.entries(BA_GLOB)
   <section class="relative mx-auto max-w-7xl px-4 pt-8 md:pt-12">
     <div class="grid items-center gap-8 md:grid-cols-2">
       <!-- IMAGE first on mobile, second on desktop -->
-      <div class="order-1 md:order-2 overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5">
+      <div
+        class="order-1 md:order-2 overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5"
+      >
         <Image
           src={heroImg}
           alt="Smiling client outdoors in Colorado winter"
@@ -120,12 +114,14 @@ const BA_ITEMS = Object.entries(BA_GLOB)
 
       <!-- COPY second on mobile, first on desktop -->
       <div class="order-2 md:order-1 max-w-[600px]">
-        <h1 class="text-pretty text-3xl/tight font-semibold text-slate-900 sm:text-4xl md:text-5xl">
+        <h1
+          class="text-pretty text-3xl/tight font-semibold text-slate-900 sm:text-4xl md:text-5xl"
+        >
           Your Most Radiant Smile Starts Here.
         </h1>
         <p class="mt-4 text-slate-600">
           Professional teeth whitening using FDA-approved plant & mineral-based
-          gels. Safe, fast, and less sensitivity than chemical based whiteners.
+          gels. Member of the Holistic Dental Association. Therefore, there will be less sensitivity then chemical based whiteners. It is safe, fast and effective.
         </p>
 
         <!-- UPDATED: dual call buttons (no text) -->
@@ -144,22 +140,38 @@ const BA_ITEMS = Object.entries(BA_GLOB)
           </a>
         </div>
 
-        <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-700">
+        <div
+          class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-700"
+        >
           <div class="inline-flex items-center gap-2">
-            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+            ></span>
             FDA Approved
           </div>
           <div class="inline-flex items-center gap-2">
-            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+            ></span>
             Plant & Mineral Based
           </div>
           <div class="inline-flex items-center gap-2">
-            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+            ></span>
             Less Sensitivity Than Chemical Based Whiteners
           </div>
           <div class="inline-flex items-center gap-2">
-            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+            ></span>
             Locally Owned
+          </div>
+          <div class="inline-flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+            ></span>
+            HSA & FSA Cards Accepted
+          </div>
+          <div class="inline-flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+            ></span>
+            Member of The Holistic Dental Association
           </div>
         </div>
       </div>
@@ -172,79 +184,112 @@ const BA_ITEMS = Object.entries(BA_GLOB)
   >
     <div class="flex items-center gap-3 pb-4">
       <div class="h-10 w-10 overflow-hidden rounded">
-        <Image src={logoDark} alt="DaVinci Radiance mark" widths={[40]} class="h-10 w-10" />
+        <Image
+          src={logoDark}
+          alt="DaVinci Radiance mark"
+          widths={[40]}
+          class="h-10 w-10"
+        />
       </div>
       <div>
         <div class="font-semibold text-slate-900">Two Colorado Locations</div>
-        <div class="text-sm text-slate-600">Colorado Springs & Lone Tree</div>
+        <div class="text-sm text-slate-600">North Colorado Springs & Lone Tree</div>
       </div>
     </div>
 
     <div class="grid gap-6 md:grid-cols-2">
-      {SITE.locations.map((loc) => {
-        const mapsQuery = encodeURIComponent(
-          `${loc.street}, ${loc.city}, ${loc.region} ${loc.postal}`
-        );
-        const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+      {
+        SITE.locations.map((loc) => {
+          const mapsQuery = encodeURIComponent(
+            `${loc.street}, ${loc.city}, ${loc.region} ${loc.postal}`,
+          );
+          const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
 
-        return (
-          <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div class="font-semibold text-slate-900">{loc.label}</div>
-            <div class="mt-1 text-slate-600">{loc.street}</div>
-            <div class="text-slate-600">
-              {loc.city}, {loc.region} {loc.postal}
-            </div>
+          return (
+            <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div class="font-semibold text-slate-900">{loc.label} - {loc.review}★ Google Reviews</div>
+              <div class="mt-1 text-slate-600">{loc.street}</div>
+              <div class="text-slate-600">
+                {loc.city}, {loc.region} {loc.postal}
+              </div>
 
-            <div class="mt-4 flex flex-wrap gap-3">
-              <a
-                href={`tel:${loc.phone}`}
-                class="rounded-lg bg-emerald-600 px-4 py-2.5 font-semibold text-white shadow-sm hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-              >
-                Call {loc.phoneHuman}
-              </a>
-              <a
-                href={`sms:${loc.phone}`}
-                class="rounded-lg border border-emerald-600 px-4 py-2.5 font-semibold text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-              >
-                Text {loc.phoneHuman}
-              </a>
-              <a
-                href={mapsUrl}
-                target="_blank"
-                rel="noopener"
-                class="rounded-lg border border-slate-300 px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-              >
-                Directions
-              </a>
+              <div class="mt-4 flex flex-wrap gap-3">
+                <a
+                  href={`tel:${loc.phone}`}
+                  class="rounded-lg bg-emerald-600 px-4 py-2.5 font-semibold text-white shadow-sm hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                >
+                  Call {loc.phoneHuman}
+                </a>
+                <a
+                  href={`sms:${loc.phone}`}
+                  class="rounded-lg border border-emerald-600 px-4 py-2.5 font-semibold text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                >
+                  Text {loc.phoneHuman}
+                </a>
+                <a
+                  href={mapsUrl}
+                  target="_blank"
+                  rel="noopener"
+                  class="rounded-lg border border-slate-300 px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                >
+                  Directions
+                </a>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })
+      }
     </div>
   </section>
 
   <!-- EXPERIENCE & TRUST BAND -->
   <section class="mx-auto mt-6 max-w-7xl px-4">
-    <div class="grid gap-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200 sm:grid-cols-3">
-      <div class="flex items-center gap-3 rounded-lg bg-emerald-50/60 p-3 ring-1 ring-emerald-100">
-        <div class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white font-semibold">14</div>
+    <div
+      class="grid gap-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200 sm:grid-cols-3"
+    >
+      <div
+        class="flex items-center gap-3 rounded-lg bg-emerald-50/60 p-3 ring-1 ring-emerald-100"
+      >
+        <div
+          class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white font-semibold"
+        >
+          14
+        </div>
         <div class="text-sm">
           <div class="font-semibold text-slate-900">Years of Experience</div>
         </div>
       </div>
 
-      <div class="flex items-center gap-3 rounded-lg bg-emerald-50/60 p-3 ring-1 ring-emerald-100">
-        <div class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white font-semibold">∞</div>
+      <div
+        class="flex items-center gap-3 rounded-lg bg-emerald-50/60 p-3 ring-1 ring-emerald-100"
+      >
+        <div
+          class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white font-semibold"
+        >
+          ∞
+        </div>
         <div class="text-sm">
-          <div class="font-semibold text-slate-900">Thousands of Clients' Teeth Whitened Every Year!</div>
+          <div class="font-semibold text-slate-900">
+            We Whiten Thousands of Clients Yearly!
+          </div>
         </div>
       </div>
 
-      <div class="flex items-center gap-3 rounded-lg bg-emerald-50/60 p-3 ring-1 ring-emerald-100">
-        <div class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white font-semibold">★</div>
+      <div
+        class="flex items-center gap-3 rounded-lg bg-emerald-50/60 p-3 ring-1 ring-emerald-100"
+      >
+        <div
+          class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white font-semibold"
+        >
+          ★
+        </div>
         <div class="text-sm">
           <div class="font-semibold text-slate-900">
-            {placeMeta?.rating ? `${placeMeta.rating}★ on Google` : "Top-Rated Service"}
+            {
+              placeMeta?.rating
+                ? `${placeMeta.rating}★ on Google`
+                : "Top-Rated Service"
+            }
           </div>
         </div>
       </div>
@@ -257,14 +302,17 @@ const BA_ITEMS = Object.entries(BA_GLOB)
       <h2 class="text-2xl font-semibold text-slate-900">Real Results</h2>
 
       <div class="flex items-center gap-3">
-        {BA_ITEMS.length > 0 && (
-          <span class="hidden text-xs text-slate-500 sm:inline">
-            {BA_ITEMS.length} case{BA_ITEMS.length === 1 ? "" : "s"}
-          </span>
-        )}
+        {
+          BA_ITEMS.length > 0 && (
+            <span class="hidden text-xs text-slate-500 sm:inline">
+              {BA_ITEMS.length} case{BA_ITEMS.length === 1 ? "" : "s"}
+            </span>
+          )
+        }
         <a
           href="/results"
-          class="text-sm font-semibold text-emerald-700 hover:text-emerald-800" style="margin-bottom:1rem;"
+          class="text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+          style="margin-bottom:1rem;"
         >
           See all results →
         </a>
@@ -273,16 +321,33 @@ const BA_ITEMS = Object.entries(BA_GLOB)
 
     <div class="relative mt-4">
       <!-- Mobile swipe hint -->
-      <div class="pointer-events-none absolute -top-6 right-0 flex items-center gap-1 text-xs text-slate-500 sm:hidden">
+      <div
+        class="pointer-events-none absolute -top-6 right-0 flex items-center gap-1 text-xs text-slate-500 sm:hidden"
+      >
         <span>Swipe</span>
-        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        <svg
+          class="h-3.5 w-3.5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"></path>
         </svg>
       </div>
 
       <!-- gradient fades -->
-      <div class="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-white to-transparent rounded-l-xl"></div>
-      <div class="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white to-transparent rounded-r-xl"></div>
+      <div
+        class="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-white to-transparent rounded-l-xl"
+      >
+      </div>
+      <div
+        class="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white to-transparent rounded-r-xl"
+      >
+      </div>
 
       <!-- Desktop arrows -->
       <button
@@ -291,7 +356,17 @@ const BA_ITEMS = Object.entries(BA_GLOB)
         aria-label="Scroll left"
         data-ba-prev
       >
-        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <svg
+          class="h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          ><path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"></path></svg
+        >
       </button>
       <button
         type="button"
@@ -299,7 +374,17 @@ const BA_ITEMS = Object.entries(BA_GLOB)
         aria-label="Scroll right"
         data-ba-next
       >
-        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <svg
+          class="h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          ><path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"></path></svg
+        >
       </button>
 
       <div
@@ -310,36 +395,41 @@ const BA_ITEMS = Object.entries(BA_GLOB)
         role="region"
       >
         <div class="flex gap-4 items-stretch">
-          {BA_ITEMS.length === 0 && (
-            <div class="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
-              Add images in <code>src/assets/images/ba/</code> named <code>1.jpg</code>, <code>2.jpg</code>, … (max 10).
-            </div>
-          )}
+          {
+            BA_ITEMS.length === 0 && (
+              <div class="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
+                Add images in <code>src/assets/images/ba/</code> named{" "}
+                <code>1.jpg</code>, <code>2.jpg</code>, … (max 10).
+              </div>
+            )
+          }
 
-          {BA_ITEMS.map((item) => (
-            <figure
-              class="shrink-0 snap-start overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm
+          {
+            BA_ITEMS.map((item) => (
+              <figure
+                class="shrink-0 snap-start overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm
                      w-auto max-w-[36rem] flex items-center justify-center"
-            >
-              <button
-                type="button"
-                class="block"
-                data-open-modal
-                data-src={item.src.src}
-                data-alt={`Before & after case ${item.num}`}
               >
-                <Image
-                  src={item.src}
-                  alt={`Before & after case ${item.num}`}
-                  widths={[640, 768, 1024, 1280]}
-                  sizes="(max-width: 640px) 28rem, (max-width: 1024px) 36rem, 40rem"
-                  loading="lazy"
-                  decoding="async"
-                  class="h-64 md:h-80 lg:h-96 w-auto max-w-full object-contain"
-                />
-              </button>
-            </figure>
-          ))}
+                <button
+                  type="button"
+                  class="block"
+                  data-open-modal
+                  data-src={item.src.src}
+                  data-alt={`Before & after case ${item.num}`}
+                >
+                  <Image
+                    src={item.src}
+                    alt={`Before & after case ${item.num}`}
+                    widths={[640, 768, 1024, 1280]}
+                    sizes="(max-width: 640px) 28rem, (max-width: 1024px) 36rem, 40rem"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-64 md:h-80 lg:h-96 w-auto max-w-full object-contain"
+                  />
+                </button>
+              </figure>
+            ))
+          }
         </div>
       </div>
     </div>
@@ -353,62 +443,99 @@ const BA_ITEMS = Object.entries(BA_GLOB)
       <button
         type="button"
         class="absolute right-4 top-4 z-10 rounded-md bg-white/90 px-3 py-1.5 text-sm font-semibold text-slate-900 ring-1 ring-slate-200 hover:bg-white"
-        data-close-modal
-      >Close</button>
+        data-close-modal>Close</button
+      >
 
-      <div class="flex h-[100dvh] w-[100vw] items-center justify-center p-2 sm:p-6 bg-black">
-        <img id="ba-modal-img" alt="" class="max-h-full max-w-full object-contain" />
+      <div
+        class="flex h-[100dvh] w-[100vw] items-center justify-center p-2 sm:p-6 bg-black"
+      >
+        <img
+          id="ba-modal-img"
+          alt=""
+          class="max-h-full max-w-full object-contain"
+        />
       </div>
     </dialog>
     <style is:inline>
-      :where(dialog)#ba-modal { margin: 0; padding: 0; border: 0; max-width: none; max-height: none; }
-      :where(dialog[open])#ba-modal { position: fixed; inset: 0; width: 100vw; height: 100dvh; }
-      #ba-modal::backdrop { background: rgba(0,0,0,0.95); }
-      html:has(#ba-modal[open]) { overflow: hidden; }
+      :where(dialog)#ba-modal {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        max-width: none;
+        max-height: none;
+      }
+      :where(dialog[open])#ba-modal {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100dvh;
+      }
+      #ba-modal::backdrop {
+        background: rgba(0, 0, 0, 0.95);
+      }
+      html:has(#ba-modal[open]) {
+        overflow: hidden;
+      }
     </style>
 
     <!-- Controls: arrows, wheel-to-horizontal, modal open/close -->
     <script is:inline>
-      const strip = document.getElementById('ba-strip');
-      const prev = document.querySelector('[data-ba-prev]');
-      const next = document.querySelector('[data-ba-next]');
-      const modal = document.getElementById('ba-modal');
-      const modalImg = document.getElementById('ba-modal-img');
+      const strip = document.getElementById("ba-strip");
+      const prev = document.querySelector("[data-ba-prev]");
+      const next = document.querySelector("[data-ba-next]");
+      const modal = document.getElementById("ba-modal");
+      const modalImg = document.getElementById("ba-modal-img");
 
       const step = () => Math.min(800, strip.clientWidth * 0.9);
-      prev?.addEventListener('click', () => strip.scrollBy({ left: -step(), behavior: 'smooth' }));
-      next?.addEventListener('click', () => strip.scrollBy({ left: step(), behavior: 'smooth' }));
+      prev?.addEventListener("click", () =>
+        strip.scrollBy({ left: -step(), behavior: "smooth" }),
+      );
+      next?.addEventListener("click", () =>
+        strip.scrollBy({ left: step(), behavior: "smooth" }),
+      );
 
-      strip?.addEventListener('wheel', (e) => {
-        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-          e.preventDefault();
-          strip.scrollBy({ left: e.deltaY, behavior: 'auto' });
-        }
-      }, { passive: false });
+      strip?.addEventListener(
+        "wheel",
+        (e) => {
+          if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+            e.preventDefault();
+            strip.scrollBy({ left: e.deltaY, behavior: "auto" });
+          }
+        },
+        { passive: false },
+      );
 
-      strip?.addEventListener('click', (e) => {
-        const btn = e.target && (e.target.closest?.('[data-open-modal]'));
+      strip?.addEventListener("click", (e) => {
+        const btn = e.target && e.target.closest?.("[data-open-modal]");
         if (!btn) return;
-        modalImg.src = btn.getAttribute('data-src');
-        modalImg.alt = btn.getAttribute('data-alt') || '';
+        modalImg.src = btn.getAttribute("data-src");
+        modalImg.alt = btn.getAttribute("data-alt") || "";
         modal.showModal();
       });
 
-      modal?.addEventListener('click', (e) => {
+      modal?.addEventListener("click", (e) => {
         if (e.target === modal) modal.close();
       });
-      document.querySelector('[data-close-modal]')?.addEventListener('click', () => modal.close());
-      window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal?.open) modal.close(); });
+      document
+        .querySelector("[data-close-modal]")
+        ?.addEventListener("click", () => modal.close());
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal?.open) modal.close();
+      });
     </script>
   </section>
 
   <!-- PROCESS -->
-  <section id="process" class="mt-16 bg-slate-50/70 py-12 ring-1 ring-slate-200/60">
+  <section
+    id="process"
+    class="mt-16 bg-slate-50/70 py-12 ring-1 ring-slate-200/60"
+  >
     <div class="mx-auto grid max-w-7xl items-center gap-10 px-4 md:grid-cols-2">
       <div class="max-w-[560px]">
         <h2 class="text-2xl font-semibold text-slate-900">
-          Whitening in 3 Simple Steps
+          Whitening in 3 Simple Steps 
         </h2>
+        <span>Lift everyday stains from coffee, tea, dark beverages, red wine, stains from smoking/chewing tobacco safely. We typically see significantly great results with fluoride stains and medication stains like tetracycline</span>
 
         <ol class="mt-5 space-y-4 text-slate-700">
           <li class="flex gap-3">
@@ -449,7 +576,9 @@ const BA_ITEMS = Object.entries(BA_GLOB)
         </div>
       </div>
 
-      <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+      <div
+        class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5"
+      >
         <Image
           src={processImg}
           alt="Client under LED light during whitening"
@@ -471,9 +600,10 @@ const BA_ITEMS = Object.entries(BA_GLOB)
       Group Events & Specials
     </h2>
     <p class="mt-2 max-w-3xl text-slate-700">
-      Planning a big day? We offer <span class="font-semibold">special rates for groups</span>—perfect
-      for wedding parties, engagement shoots, birthdays, reunions, prom groups,
-      corporate teams, pageant squads, and creator bundles.
+      Planning a big day? We offer <span class="font-semibold"
+        >special rates for groups</span
+      >—perfect for wedding parties, engagement shoots, birthdays, reunions,
+      prom groups, corporate teams, pageant squads, and creator bundles.
     </p>
     <ul class="mt-4 grid gap-2 text-slate-700 sm:grid-cols-2">
       <li>• Wedding parties & engagement shoots</li>
@@ -510,12 +640,14 @@ const BA_ITEMS = Object.entries(BA_GLOB)
         <h2 class="text-2xl font-semibold text-slate-900">
           Clients Love Their Results
         </h2>
-        {placeMeta?.rating && placeMeta?.user_ratings_total && (
-          <p class="mt-1 text-slate-600">
-            Google rating <span class="font-medium">{placeMeta.rating}</span
-            >/5 · {placeMeta.user_ratings_total} reviews
-          </p>
-        )}
+        {
+          placeMeta?.rating && placeMeta?.user_ratings_total && (
+            <p class="mt-1 text-slate-600">
+              Google rating <span class="font-medium">{placeMeta.rating}</span>
+              /5 · {placeMeta.user_ratings_total} reviews
+            </p>
+          )
+        }
       </div>
       <a
         href={GOOGLE_REVIEWS_URL}
@@ -530,145 +662,321 @@ const BA_ITEMS = Object.entries(BA_GLOB)
       class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 [--card-w:20rem] sm:[--card-w:auto] overflow-x-auto sm:overflow-visible pb-1"
       style="scroll-snap-type:x mandatory"
     >
-      {reviews.length === 0 && (
-        <div class="rounded-xl border border-slate-200 p-5 text-slate-600">
-          Reviews will appear here soon.
-        </div>
-      )}
+      {
+        reviews.length === 0 && (
+          <div class="rounded-xl border border-slate-200 p-5 text-slate-600">
+            Reviews will appear here soon.
+          </div>
+        )
+      }
 
-      {reviews.map((rv) => (
-        <article
-          class="min-w-[var(--card-w)] scroll-snap-align-start rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
-        >
-          <div class="flex items-center gap-3">
-            {rv.profile_photo_url && (
-              <img
-                src={rv.profile_photo_url}
-                alt={rv.author_name}
-                width="40"
-                height="40"
-                class="h-10 w-10 rounded-full"
-              />
-            )}
-            <div>
-              <div class="font-medium text-slate-900">{rv.author_name}</div>
-              <div class="text-sm text-slate-500">{rv.time_desc}</div>
+      {
+        reviews.map((rv) => (
+          <article class="min-w-[var(--card-w)] scroll-snap-align-start rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div class="flex items-center gap-3">
+              {rv.profile_photo_url && (
+                <img
+                  src={rv.profile_photo_url}
+                  alt={rv.author_name}
+                  width="40"
+                  height="40"
+                  class="h-10 w-10 rounded-full"
+                />
+              )}
+              <div>
+                <div class="font-medium text-slate-900">{rv.author_name}</div>
+                <div class="text-sm text-slate-500">{rv.time_desc}</div>
+              </div>
             </div>
-          </div>
-          <div
-            class="mt-3 text-amber-500"
-            aria-label={`${rv.rating} out of 5 stars`}
-          >
-            {"★★★★★".slice(0, rv.rating)}
-            <span class="text-slate-300">
-              {"★★★★★".slice(rv.rating)}
-            </span>
-          </div>
-          <p class="mt-3 whitespace-pre-wrap text-slate-700">{rv.text}</p>
-        </article>
-      ))}
+            <div
+              class="mt-3 text-amber-500"
+              aria-label={`${rv.rating} out of 5 stars`}
+            >
+              {"★★★★★".slice(0, rv.rating)}
+              <span class="text-slate-300">{"★★★★★".slice(rv.rating)}</span>
+            </div>
+            <p class="mt-3 whitespace-pre-wrap text-slate-700">{rv.text}</p>
+          </article>
+        ))
+      }
     </div>
   </section>
 
   <!-- FAQ -->
   <section id="faq" class="mx-auto mt-16 max-w-7xl px-4">
-    <h2 class="text-2xl font-semibold text-slate-900">Frequently Asked Questions</h2>
+    <h2 class="text-2xl font-semibold text-slate-900">
+      Frequently Asked Questions
+    </h2>
     <p class="mt-2 max-w-3xl text-slate-700">
-      Quick answers about safety, results, timing, and sensitivity. Still curious?
+      Quick answers about safety, results, timing, and sensitivity. Still
+      curious?
       <!-- UPDATED: replace text link with dual call links -->
-      <a href={`tel:${SPRINGS.phone}`} class="font-semibold text-emerald-700 hover:text-emerald-800">Call {SPRINGS.label}</a>
+      <a
+        href={`tel:${SPRINGS.phone}`}
+        class="font-semibold text-emerald-700 hover:text-emerald-800"
+        >Call {SPRINGS.label}</a
+      >
       <span> or </span>
-      <a href={`tel:${LONE.phone}`} class="font-semibold text-emerald-700 hover:text-emerald-800">Call {LONE.label}</a>
+      <a
+        href={`tel:${LONE.phone}`}
+        class="font-semibold text-emerald-700 hover:text-emerald-800"
+        >Call {LONE.label}</a
+      >
     </p>
 
     <div class="mt-6 space-y-3">
-      <details class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900">
+      <details
+        class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md"
+      >
+        <summary
+          class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900"
+        >
           How white will my teeth get?
-          <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"/></svg>
+          <svg
+            class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            ><path
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"
+            ></path></svg
+          >
         </summary>
         <div class="px-5 pb-5 text-slate-700">
-          After undergoing whitening with the DaVinci Teeth Whitening System, teeth shades will brighten up to 14 shades, with an average improvement of five to eight shades with each 20 minute session. Individual results will depend on your current tooth shade, treatment time, and the composition of your teeth. Your end result will be a whiter, healthier smile. Everyone's teeth are different and will have a natural stop point. We recommend a 60 minute session for optimal results and to remove all layers of staining.
+          After undergoing whitening with the DaVinci Teeth Whitening, teeth
+          shades will brighten up to 14 shades, with an average improvement of
+          five to eight shades with each 20 minute session. Individual results
+          will depend on your current tooth shade, treatment time, and the
+          composition of your teeth. Your end result will be a whiter, healthier
+          smile. Everyone's teeth are different and will have a natural stop
+          point. We recommend a 60 minute session for optimal results and to
+          remove all layers of staining.
         </div>
       </details>
 
-      <details class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900">
+      <details
+        class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md"
+      >
+        <summary
+          class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900"
+        >
           How long will the whitening last?
-          <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"/></svg>
+          <svg
+            class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            ><path
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"
+            ></path></svg
+          >
         </summary>
         <div class="px-5 pb-5 text-slate-700">
-          This varies from person to person and depends on your diet and lifestyle. However, with proper maintenance and periodic touch-up treatments, you can keep your smile looking great for a lifetime.
+          This varies from person to person and depends on your diet and
+          lifestyle. However, with proper maintenance and periodic touch-up
+          treatments, you can keep your smile looking great for a lifetime.
         </div>
       </details>
 
-      <details class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900">
+      <details
+        class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md"
+      >
+        <summary
+          class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900"
+        >
           Is Da Vinci Teeth Whitening safe?
-          <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"/></svg>
+          <svg
+            class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            ><path
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"
+            ></path></svg
+          >
         </summary>
         <div class="px-5 pb-5 text-slate-700">
-          Yes, the DaVinci whitening gel formulation is an organic plant and mineral based product with built in enamel building qualities. Scientific research has shown that the active ingredients in the DaVinci Teeth Whitening Gels are safe and effective. Our whitening equipment is FDA approved and has been used throughout the dental and cosmetic community for years. DaVinci Teeth Whitening does not change or damage the structure of the teeth; it merely lifts and removes common stains from coffee, tea, red wine, dark sodas, dark foods, and smoking or chewing tobacco, making your teeth whiter.
+          Yes, the DaVinci whitening gel formulation is an organic plant and
+          mineral based product with built in enamel building qualities.
+          Scientific research has shown that the active ingredients in the
+          DaVinci Teeth Whitening Gels are safe and effective. Our whitening gel
+          is FDA approved and has been used throughout the dental and cosmetic
+          community for years. DaVinci Teeth Whitening does not change or damage
+          the structure of the teeth; it merely lifts and removes common stains
+          from coffee, tea, red wine, dark sodas, dark foods, and smoking or
+          chewing tobacco, making your teeth whiter.
         </div>
       </details>
 
-      <details class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900">
+      <details
+        class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md"
+      >
+        <summary
+          class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900"
+        >
           How long does the treatment take?
-          <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"/></svg>
+          <svg
+            class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            ><path
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"
+            ></path></svg
+          >
         </summary>
         <div class="px-5 pb-5 text-slate-700">
-          Treatment times are 20 to 60 minutes depending on the discoloration of your teeth and how white you want them. It takes no longer than the time it would for you to have a haircut or a facial — it is that simple!
+          Treatment times are 3 to 4 20 minute sessions at the same time
+          depending on your need. It takes no longer than the time it would for
+          you to have a deep muscle massage or a facial — it is that simple!
         </div>
       </details>
 
-      <details class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900">
+      <details
+        class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md"
+      >
+        <summary
+          class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900"
+        >
           What is the difference?
-          <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"/></svg>
+          <svg
+            class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            ><path
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"
+            ></path></svg
+          >
         </summary>
         <div class="px-5 pb-5 text-slate-700">
-          The DaVinci teeth whitening system uses the latest LED cold laser technology and our signature whitening gel consisting of natural plant and mineral ingredients. Our system has proven to yield superior results with little to no sensitivity when compared to other whitening systems.
+          DaVinci teeth whitening uses the latest LED cool laser
+          technology and our signature whitening gel consisting of natural plant
+          and mineral ingredients. It has proven to yield superior
+          results with little to no sensitivity when compared to other chemeical-based whitening
+          systems.
         </div>
       </details>
 
-      <details class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900">
-          Does it hurt?
-          <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"/></svg>
+      <details
+        class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md"
+      >
+        <summary
+          class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900"
+        >
+          Will I experience sensitivity?
+          <svg
+            class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"
+            ></path>
+          </svg>
         </summary>
-        <div class="px-5 pb-5 text-slate-700">
-          No, because our signature laser gel is all natural the treatment does not hurt and most clients experience no sensitivity. A very small percentage of clients may feel some tooth sensitivity, especially if they are dehydrated or consume very cold/hot foods or drinks within two hours after the whitening session. Any sensitivity is short term and gone within 24–48 hours. We do offer solutions for those that are concerned about sensitivity.
+
+        <div class="px-5 pb-5 text-slate-700 space-y-4">
+          <p>
+            There will be less sensitivity than with chemical based products.
+            Some clients may feel some tooth sensitivity, especially if they are
+            dehydrated or consume very cold/hot foods or drinks within two hours
+            after the whitening session. Any sensitivity is short term and gone
+            within 24–48 hours. We do offer solutions for those that are
+            concerned about sensitivity. Our desensitizer is an amazing mineral
+            treatment which helps a lot with sensitivity.
+          </p>
+
+          <!-- Product Image -->
+          <div class="flex justify-center">
+            <div
+              class="w-full md:w-1/4 overflow-hidden rounded-lg border border-slate-200 shadow-sm"
+            >
+              <Image
+                src={kitImg}
+                alt="DaVinci products available at time of session"
+                widths={[480, 768, 1024]}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                class="block w-full h-auto object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </div>
         </div>
       </details>
 
-      <details class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900">
+      <details
+        class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md"
+      >
+        <summary
+          class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900"
+        >
           Will DaVinci Teeth Whitening work on crowns and fillings?
-          <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"/></svg>
+          <svg
+            class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            ><path
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"
+            ></path></svg
+          >
         </summary>
         <div class="px-5 pb-5 text-slate-700">
-          Yes, DaVinci teeth whitening will remove staining from existing dental work and take it back to the original color. Our goal is to clean up the existing dental work and whiten the natural teeth to match for a nice even smile. We cannot whiten them beyond the original color of the material used at the time of placement. If your existing dental work is not in your smile line it won’t matter either way because it is not visible.
+          Yes, DaVinci teeth whitening will remove staining from existing dental
+          work and take it back to the original color. 
+          Our goal is to clean up the existing dental work and whiten the natural teeth to help match the crowns as much as possible for a more even smile.
+           We cannot whiten them beyond the original color of
+          the material used at the time of placement. If your existing dental
+          work is not in your smile line it won’t matter either way because it
+          is not visible.
         </div>
       </details>
 
-      <details class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900">
+      <details
+        class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md"
+      >
+        <summary
+          class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900"
+        >
           Should I consider DaVinci Teeth Whitening?
-          <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"/></svg>
+          <svg
+            class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            ><path
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"
+            ></path></svg
+          >
         </summary>
         <div class="px-5 pb-5 text-slate-700">
-          Studies have shown that people with whiter teeth look younger and there is a correlation between high self-esteem and a bright, confident smile. DaVinci Teeth Whitening is a great way to instantly enhance your appearance.
+          Studies have shown that people with whiter teeth look younger and
+          there is a correlation between high self-esteem and a bright,
+          confident smile. DaVinci Teeth Whitening is a great way to instantly
+          enhance your appearance.
         </div>
       </details>
 
-      <details class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900">
+      <details
+        class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md"
+      >
+        <summary
+          class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900"
+        >
           Is DaVinci Teeth Whitening treatment for everyone?
-          <svg class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"/></svg>
+          <svg
+            class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            ><path
+              d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.086l3.71-3.855a.75.75 0 1 1 1.08 1.04l-4.24 4.4a.75.75 0 0 1-1.08 0l-4.24-4.4a.75.75 0 0 1 .02-1.06z"
+            ></path></svg
+          >
         </summary>
         <div class="px-5 pb-5 text-slate-700">
-          The DaVinci Teeth Whitening treatment provides dramatic results for anyone who wants to whiten their teeth. This includes people with teeth that have been stained by smoking, chewing tobacco, or by substances such as coffee, tea, red wine, dark sodas, dark foods, and other consumable items. We also see great results for teeth stained by fluoride, tetracycline, and hereditary discoloration. Although fluoride and tetracycline stains cannot be removed completely, we typically see significantly great results.
+          The DaVinci Teeth Whitening treatment provides dramatic results for
+          anyone who wants to whiten their teeth. This includes people with
+          teeth that have been stained by smoking, chewing tobacco, or by
+          substances such as coffee, tea, red wine, dark sodas, dark foods, and
+          other consumable items. We also see great results for teeth stained by
+          fluoride, tetracycline, and hereditary discoloration. Although
+          fluoride and tetracycline stains cannot be removed completely, we
+          typically see significantly great results.
         </div>
       </details>
     </div>
@@ -676,79 +984,79 @@ const BA_ITEMS = Object.entries(BA_GLOB)
     <!-- FAQPage structured data -->
     <script type="application/ld+json">
       {
-        "@context":"https://schema.org",
-        "@type":"FAQPage",
-        "mainEntity":[
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
           {
-            "@type":"Question",
-            "name":"How white will my teeth get?",
-            "acceptedAnswer":{
-              "@type":"Answer",
-              "text":"After undergoing whitening with the DaVinci Teeth Whitening System, teeth shades will brighten up to 14 shades, with an average improvement of five to eight shades with each 20 minute session. Individual results will depend on your current tooth shade, treatment time, and the composition of your teeth. Your end result will be a whiter, healthier smile. Everyone's teeth are different and will have a natural stop point. We recommend a 60 minute session for optimal results and to remove all layers of staining."
+            "@type": "Question",
+            "name": "How white will my teeth get?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "After undergoing whitening with the DaVinci Teeth Whitening System, teeth shades will brighten up to 14 shades, with an average improvement of five to eight shades with each 20 minute session. Individual results will depend on your current tooth shade, treatment time, and the composition of your teeth. Your end result will be a whiter, healthier smile. Everyone's teeth are different and will have a natural stop point. We recommend a 60 minute session for optimal results and to remove all layers of staining."
             }
           },
           {
-            "@type":"Question",
-            "name":"How long will the whitening last?",
-            "acceptedAnswer":{
-              "@type":"Answer",
-              "text":"This varies from person to person and depends on your diet and lifestyle. However, with proper maintenance and periodic touch-up treatments, you can keep your smile looking great for a lifetime."
+            "@type": "Question",
+            "name": "How long will the whitening last?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "This varies from person to person and depends on your diet and lifestyle. However, with proper maintenance and periodic touch-up treatments, you can keep your smile looking great for a lifetime."
             }
           },
           {
-            "@type":"Question",
-            "name":"Is Da Vinci Teeth Whitening safe?",
-            "acceptedAnswer":{
-              "@type":"Answer",
-              "text":"Yes, the DaVinci whitening gel formulation is an organic plant and mineral based product with built in enamel building qualities. Scientific research has shown that the active ingredients in the DaVinci Teeth Whitening Gels are safe and effective. Our whitening equipment is FDA approved and has been used throughout the dental and cosmetic community for years. DaVinci Teeth Whitening does not change or damage the structure of the teeth; it merely lifts and removes common stains from coffee, tea, red wine, dark sodas, dark foods, and smoking or chewing tobacco, making your teeth whiter."
+            "@type": "Question",
+            "name": "Is Da Vinci Teeth Whitening safe?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, the DaVinci whitening gel formulation is an organic plant and mineral based product with built in enamel building qualities. Scientific research has shown that the active ingredients in the DaVinci Teeth Whitening Gels are safe and effective. Our whitening gel is FDA approved and has been used throughout the dental and cosmetic community for years. DaVinci Teeth Whitening does not change or damage the structure of the teeth; it merely lifts and removes common stains from coffee, tea, red wine, dark sodas, dark foods, and smoking or chewing tobacco, making your teeth whiter."
             }
           },
           {
-            "@type":"Question",
-            "name":"How long does the treatment take?",
-            "acceptedAnswer":{
-              "@type":"Answer",
-              "text":"Treatment times are 20 to 60 minutes depending on the discoloration of your teeth and how white you want them. It takes no longer than the time it would for you to have a haircut or a facial — it is that simple!"
+            "@type": "Question",
+            "name": "How long does the treatment take?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Treatment times are 20 to 60 minutes depending on the discoloration of your teeth and how white you want them. It takes no longer than the time it would for you to have a haircut or a facial — it is that simple!"
             }
           },
           {
-            "@type":"Question",
-            "name":"What is the difference?",
-            "acceptedAnswer":{
-              "@type":"Answer",
-              "text":"The DaVinci teeth whitening system uses the latest LED cold laser technology and our signature whitening gel consisting of natural plant and mineral ingredients. Our system has proven to yield superior results with little to no sensitivity when compared to other whitening systems."
+            "@type": "Question",
+            "name": "What is the difference?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The DaVinci teeth whitening system uses the latest LED cool laser technology and our signature whitening gel consisting of natural plant and mineral ingredients. Our system has proven to yield superior results with little to no sensitivity when compared to other whitening systems."
             }
           },
           {
-            "@type":"Question",
-            "name":"Does it hurt?",
-            "acceptedAnswer":{
-              "@type":"Answer",
-              "text":"No, because our signature laser gel is all natural the treatment does not hurt and most clients experience no sensitivity. A very small percentage of clients may feel some tooth sensitivity, especially if they are dehydrated or consume very cold/hot foods or drinks within two hours after the whitening session. Any sensitivity is short term and gone within 24–48 hours. We do offer solutions for those that are concerned about sensitivity."
+            "@type": "Question",
+            "name": "Does it hurt?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No, because our signature laser gel is all natural the treatment does not hurt and most clients experience no sensitivity. A very small percentage of clients may feel some tooth sensitivity, especially if they are dehydrated or consume very cold/hot foods or drinks within two hours after the whitening session. Any sensitivity is short term and gone within 24–48 hours. We do offer solutions for those that are concerned about sensitivity."
             }
           },
           {
-            "@type":"Question",
-            "name":"Will DaVinci Teeth Whitening work on crowns and fillings?",
-            "acceptedAnswer":{
-              "@type":"Answer",
-              "text":"Yes, DaVinci teeth whitening will remove staining from existing dental work and take it back to the original color. Our goal is to clean up the existing dental work and whiten the natural teeth to match for a nice even smile. We cannot whiten them beyond the original color of the material used at the time of placement. If your existing dental work is not in your smile line it won’t matter either way because it is not visible."
+            "@type": "Question",
+            "name": "Will DaVinci Teeth Whitening work on crowns and fillings?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, DaVinci teeth whitening will remove staining from existing dental work and take it back to the original color. Our goal is to clean up the existing dental work and whiten the natural teeth to match for a nice even smile. We cannot whiten them beyond the original color of the material used at the time of placement. If your existing dental work is not in your smile line it won’t matter either way because it is not visible."
             }
           },
           {
-            "@type":"Question",
-            "name":"Should I consider DaVinci Teeth Whitening?",
-            "acceptedAnswer":{
-              "@type":"Answer",
-              "text":"Studies have shown that people with whiter teeth look younger and there is a correlation between high self-esteem and a bright, confident smile. DaVinci Teeth Whitening is a great way to instantly enhance your appearance."
+            "@type": "Question",
+            "name": "Should I consider DaVinci Teeth Whitening?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Studies have shown that people with whiter teeth look younger and there is a correlation between high self-esteem and a bright, confident smile. DaVinci Teeth Whitening is a great way to instantly enhance your appearance."
             }
           },
           {
-            "@type":"Question",
-            "name":"Is DaVinci Teeth Whitening treatment for everyone?",
-            "acceptedAnswer":{
-              "@type":"Answer",
-              "text":"The DaVinci Teeth Whitening treatment provides dramatic results for anyone who wants to whiten their teeth. This includes people with teeth that have been stained by smoking, chewing tobacco, or by substances such as coffee, tea, red wine, dark sodas, dark foods, and other consumable items. We also see great results for teeth stained by fluoride, tetracycline, and hereditary discoloration. Although fluoride and tetracycline stains cannot be removed completely, we typically see significantly great results."
+            "@type": "Question",
+            "name": "Is DaVinci Teeth Whitening treatment for everyone?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The DaVinci Teeth Whitening treatment provides dramatic results for anyone who wants to whiten their teeth. This includes people with teeth that have been stained by smoking, chewing tobacco, or by substances such as coffee, tea, red wine, dark sodas, dark foods, and other consumable items. We also see great results for teeth stained by fluoride, tetracycline, and hereditary discoloration. Although fluoride and tetracycline stains cannot be removed completely, we typically see significantly great results."
             }
           }
         ]

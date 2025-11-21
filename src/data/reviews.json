@@ -1,14 +1,70 @@
 {
   "name": "DaVinci Radiance",
-  "rating": 5,
-  "user_ratings_total": 42,
-  "url": "",
+  "rating": 4.9,
+  "user_ratings_total": 132,
+  "url": "https://search.google.com/local/reviews?placeid=XXXX",
   "reviews": [
     {
-      "author_name": "Happy Client",
+      "author_name": "Scott B.",
       "rating": 5,
-      "time_desc": "2 weeks ago",
-      "text": "Fast and painless. My teeth are noticeably whiter!",
+      "time_desc": "3 Years Ago",
+      "text": "Beth is an absolute all star in her expertise. If you need your teeth whitened she's the one to go to! She's professional, friendly, and will bend over backward to make sure her customers are satisfied with their visit. Thanks so much for all your hard work!",
+      "profile_photo_url": ""
+    },
+    {
+      "author_name": "Clifton A.",
+      "rating": 5,
+      "time_desc": "5 Months Ago",
+      "text": "She explained everything that was going to happen and how the process worked and I was amazed at how white my teeth became after 50 years of chewing tobacco and she was very friendly and nice. I highly recommend.",
+      "profile_photo_url": ""
+    },
+    {
+      "author_name": "Nicole D.",
+      "rating": 5,
+      "time_desc": "3 Years Ago",
+      "text": "Beth is amazing! I went from a 5 to a -2 in just one session!! -3 is the whitest you can possibly be so I was just one shade away! What I close about the product is it is all natural based ingredients. I had zero gum or teeth sensitivity afterward. I’m cautious about what ingredients I use on my body. Highly recommend!! Best and quickest teeth whitening system out there",
+      "profile_photo_url": ""
+    },
+    {
+      "author_name": "Kari A.",
+      "rating": 5,
+      "time_desc": "2 Months Ago",
+      "text": "Just had my teeth whitened yesterday on 8/28 and it was amazing! Melissa is fantastic and so kind. She explained everything so thoroughly and made sure that I was comfortable every step of the way. I was so relaxed at one point that I almost fell asleep! My results were better than I could have imagined! I went from a level 10 to a 1!! I will be a repeat customer at this location for sure! I used the desensitizer/minerals, and the sealant and I highly recommend them both. Minimal sensitivity and discomfort afterward and the results are holding nicely. I was skeptical about using a place in the mall but it was fantastic! If you’re on the fence, hesitate no more - go ahead and do it, you will not regret it!",
+      "profile_photo_url": ""
+    },
+    {
+      "author_name": "Tiffany R.",
+      "rating": 5,
+      "time_desc": "3 Years Ago",
+      "text": "Beth is AWESOME!!! I was beyond happy with my whitening results! Def would recommend.",
+      "profile_photo_url": ""
+    },
+    {
+      "author_name": "Kathryn L.",
+      "rating": 5,
+      "time_desc": "A Year Ago",
+      "text": "Melissa was so professional, nurturing and friendly! She put us at ease right away and made us comfortable. She was perfect with my elderly mom and continued to be attentive throughout the process. It was not as hard as we thought it would be. We were both so pleased with the results-our teeth are white and it’s so much fun to smile now! Thank you Melissa for all your encouragement and we’ll definitely be back next year!",
+      "profile_photo_url": ""
+    },
+    {
+      "author_name": "Ni P.",
+      "rating": 5,
+      "time_desc": "2 Years Ago",
+      "text": "It Works! I am very happy with the awesome results. The staff helping me were very friendly and professional.",
+      "profile_photo_url": ""
+    },
+    {
+      "author_name": "Brady P.",
+      "rating": 5,
+      "time_desc": "3 Years Ago",
+      "text": "",
+      "profile_photo_url": ""
+    },
+    {
+      "author_name": "Emily C.",
+      "rating": 5,
+      "time_desc": "4 Years Ago",
+      "text": "",
       "profile_photo_url": ""
     }
   ]

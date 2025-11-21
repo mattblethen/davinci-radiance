@@ -5,8 +5,8 @@ import { Image } from "astro:assets";
 
 // Images (temporary stand-ins you’ll replace later)
 import heroAlt from "../assets/images/IMG_6743.JPG";
-import stepImg1 from "../assets/images/InSession.jpeg";
-import stepImg2 from "../assets/images/InSession2.jpeg";
+import stepImg1 from "../assets/images/apply.jpg";
+import stepImg2 from "../assets/images/process.jpg";
 import resultImg from "../assets/images/ba/2.jpg";
 import logoDark from "../assets/images/logo.png";
 // NEW: After-care kit photo
@@ -20,17 +20,14 @@ const PAGE = {
 };
 
 // TS-safe primary/secondary locations (prioritize Colorado Springs)
-const SPRINGS = (
-  SITE.locations.find((l) => l.label === "North Colorado Springs") ??
-  SITE.locations[0]
-)!;
+const SPRINGS = (SITE.locations.find(
+  (l) => l.label === "North Colorado Springs",
+) ?? SITE.locations[0])!;
 
-const LONE = (
-  SITE.locations.find((l) => l.label === "Lone Tree") ??
+const LONE = (SITE.locations.find((l) => l.label === "Lone Tree") ??
   SITE.locations.find((l) => l !== SPRINGS) ??
   SITE.locations[1] ??
-  SITE.locations[0]
-)!;
+  SITE.locations[0])!;
 
 // Schema (kept consistent with site)
 const schemaLocal = SITE.locations.map((loc) => ({
@@ -54,17 +51,22 @@ const schemaLocal = SITE.locations.map((loc) => ({
 ---
 
 <Base title={PAGE.title} description={PAGE.description} schema={schemaLocal}>
-
   <!-- HERO -->
   <section class="relative mx-auto max-w-7xl px-4 pt-8 md:pt-12">
     <div class="grid items-center gap-8 md:grid-cols-2">
       <div class="max-w-[600px]">
-        <h1 class="text-pretty text-3xl/tight font-semibold text-slate-900 sm:text-4xl md:text-5xl">
+        <h1
+          class="text-pretty text-3xl/tight font-semibold text-slate-900 sm:text-4xl md:text-5xl"
+        >
           Whitening in 3 Simple Steps
         </h1>
         <p class="mt-4 text-slate-600">
-          First time? Here’s exactly what happens at DaVinci Radiance. Our enamel-friendly, plant &amp; mineral-based gel
-          works with a blue LED light to lift everyday stains comfortably and efficiently.
+          First time? Here’s exactly what happens at DaVinci Radiance. Our
+          enamel-friendly, plant &amp; mineral-based gel works with a blue LED
+          light to lift everyday stains from coffee, tea, dark beverages, red
+          wine, stains from smoking/chewing tobacco safely. We typically see
+          significantly great results with Fluoride stains and medication stains
+          like Tetracycline
         </p>
 
         <!-- UPDATED: dual call buttons (no text) -->
@@ -83,22 +85,38 @@ const schemaLocal = SITE.locations.map((loc) => ({
           </a>
         </div>
 
-        <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-700">
+        <div
+          class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-700"
+        >
           <div class="inline-flex items-center gap-2">
-            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
-            FDA Approved Equipment
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+            ></span>
+            FDA Approved Ingredients
           </div>
           <div class="inline-flex items-center gap-2">
-            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+            ></span>
             Plant &amp; Mineral Based Gel
           </div>
           <div class="inline-flex items-center gap-2">
-            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
-            Sensitivity-Conscious
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+            ></span>
+            Less Sensitivity Than Chemical Based Whiteners
           </div>
           <div class="inline-flex items-center gap-2">
-            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+            ></span>
             Immediate, Visible Results
+          </div>
+          <div class="inline-flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+            ></span>
+            Member of Holistic Dental Association
+          </div>
+          <div class="inline-flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+            ></span>
+            HSA & FSA Cards Accepted
           </div>
         </div>
       </div>
@@ -123,12 +141,16 @@ const schemaLocal = SITE.locations.map((loc) => ({
       <div class="max-w-[560px]">
         <h2 class="text-2xl font-semibold text-slate-900">Step 1 — Apply</h2>
         <p class="mt-3 text-slate-700">
-          We begin by reviewing your goals and shade, then gently prep your smile. A professional whitening gel is applied
-          to both arches while lips and gums are protected. You can relax while everything is positioned comfortably.
+          We begin by reviewing your goals and shade, then gently prep your
+          smile. A professional whitening gel is applied to both arches while
+          lips and gums are protected. You can relax while everything is
+          positioned comfortably.
         </p>
       </div>
 
-      <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+      <div
+        class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5"
+      >
         <Image
           src={stepImg1}
           alt="Whitening gel and protection in place before LED activation"
@@ -145,7 +167,9 @@ const schemaLocal = SITE.locations.map((loc) => ({
   <!-- STEP 2 -->
   <section class="mx-auto mt-12 max-w-7xl px-4">
     <div class="grid items-center gap-10 md:grid-cols-2">
-      <div class="order-2 md:order-1 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+      <div
+        class="order-2 md:order-1 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5"
+      >
         <Image
           src={stepImg2}
           alt="LED light positioned to activate whitening gel"
@@ -153,15 +177,17 @@ const schemaLocal = SITE.locations.map((loc) => ({
           sizes="(max-width: 768px) 100vw, 42rem"
           loading="lazy"
           decoding="async"
-          class="block"
+          class="block object-cover w-full h-full"
         />
       </div>
 
       <div class="order-1 md:order-2 max-w-[560px]">
         <h2 class="text-2xl font-semibold text-slate-900">Step 2 — Light</h2>
         <p class="mt-3 text-slate-700">
-          A cool blue LED light is positioned over the teeth to help accelerate whitening. You’ll complete short,
-          comfortable light cycles while relaxing in the chair — many people even nap!
+          A cool blue LED light is positioned in front of the teeth to help
+          accelerate whitening. You will complete 3 to 4 twenty minute sessions,
+          depending on how stained your teeth are. Relax with the chair massage,
+          listen to your ear pods, or take a short nap.
         </p>
       </div>
     </div>
@@ -173,21 +199,26 @@ const schemaLocal = SITE.locations.map((loc) => ({
       <div class="max-w-[560px]">
         <h2 class="text-2xl font-semibold text-slate-900">Step 3 — White</h2>
         <p class="mt-3 text-slate-700">
-          Once your final light cycle is finished, we reveal your results side-by-side with your starting shade.
-          Most clients notice an instant, visible difference — a cleaner, brighter smile in less than an hour.
+          Once your final light cycle is finished, we reveal your results
+          side-by-side with your starting shade. You will see instant results
+          and begin enoying your bright smile immediately after service.
         </p>
 
-        <div class="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h3 class="font-semibold text-slate-900">Timing &amp; Results</h3>
+        <div
+          class="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+        >
+          <h3 class="font-semibold text-slate-900">Results</h3>
           <p class="mt-2 text-slate-700">
-            Appointments typically take <strong>15 – 45 minutes</strong> of active whitening. Many clients see
-            an average improvement of <strong>4 – 14 shades</strong> depending on starting color, tooth makeup,
-            and session length. Individual results vary.
+            Many clients see an average improvement of 4 – 14 shades depending
+            on starting color, tooth composition, and session length. Individual
+            results vary.
           </p>
         </div>
       </div>
 
-      <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+      <div
+        class="overflow-hidden rounded-2xl bg-black shadow-sm ring-1 ring-black/5"
+      >
         <Image
           src={resultImg}
           alt="Real DaVinci Radiance before and after result"
@@ -195,7 +226,8 @@ const schemaLocal = SITE.locations.map((loc) => ({
           sizes="(max-width: 768px) 100vw, 42rem"
           loading="lazy"
           decoding="async"
-          class="block object-contain bg-slate-50"
+          style="margin:2rem auto; padding: 0 2rem;"
+          class="block object-contain"
         />
       </div>
     </div>
@@ -204,29 +236,42 @@ const schemaLocal = SITE.locations.map((loc) => ({
   <!-- AFTER-CARE -->
   <section class="mx-auto mt-16 max-w-7xl px-4">
     <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 class="text-2xl font-semibold text-slate-900">After-Care: Keep Your Smile Bright</h2>
+      <h2 class="text-2xl font-semibold text-slate-900">
+        Before & After-Care: Keep Your Smile Bright
+      </h2>
 
       <div class="mt-3 grid gap-8 md:grid-cols-2 md:items-start">
-        <div>
+        <div><span>Our whitening technican will explain our products, how and why you may choose to use them, especially for the for first 24 hours of your service. 
+There will be specific restictions for food and beverages for the first 24 hours of your treatment if the products are not used. </span><br><br>
           <ul class="grid gap-3 text-slate-700">
-  <li>• Avoid deeply colored foods/drinks for a short time after your session.</li>
-  <li>• Maintain daily brushing and hydration for long-lasting brightness.</li>
-  <li>
-    • Touch-ups every few months help offset stains from coffee, tea, red wine, dark sodas,
-    dark foods, and smoking or chewing tobacco.
-  </li>
-  <li>
-    • Although fluoride and tetracycline stains cannot be removed completely, we typically
-    see significantly great results and noticeable brightening.
-  </li>
-  <li>• Ask about sensitivity or at-home maintenance recommendations.</li>
-</ul>
-
+            <li>
+              • Avoid deeply colored foods/drinks for a short time after your
+              session.
+            </li>
+            <li>
+              • Maintain daily brushing and hydration for long-lasting
+              brightness.
+            </li>
+            <li>
+              • Touch-ups every few months help offset stains from coffee, tea,
+              red wine, dark sodas, dark foods, and smoking or chewing tobacco.
+            </li>
+            <li>
+              • Although fluoride and tetracycline stains cannot be removed
+              completely, we typically see significantly great results and
+              noticeable brightening.
+            </li>
+            <li>
+              • Ask about sensitivity or at-home maintenance recommendations.
+            </li>
+          </ul>
 
           <p class="mt-4 text-slate-700">
-            We also offer take-home and add-on options to protect and extend your results —
-            including TrueMinerals desensitizing treatment, Shield Shimmer sealant, and our
-            On-The-Go whitening pen. <strong>These products are available at the time of service.</strong>
+            We also offer take-home and add-on options to protect and extend
+            your results — including TrueMinerals desensitizing treatment,
+            Shield Shimmer sealant, and our On-The-Go whitening pen. <strong
+              >These products are available at the time of service.</strong
+            >
           </p>
 
           <!-- UPDATED: dual call buttons (no text) -->
@@ -267,7 +312,12 @@ const schemaLocal = SITE.locations.map((loc) => ({
   >
     <div class="flex items-center gap-3 pb-4">
       <div class="h-10 w-10 overflow-hidden rounded">
-        <Image src={logoDark} alt="DaVinci Radiance mark" widths={[40]} class="h-10 w-10" />
+        <Image
+          src={logoDark}
+          alt="DaVinci Radiance mark"
+          widths={[40]}
+          class="h-10 w-10"
+        />
       </div>
       <div>
         <div class="font-semibold text-slate-900">Two Colorado Locations</div>
@@ -276,45 +326,49 @@ const schemaLocal = SITE.locations.map((loc) => ({
     </div>
 
     <div class="grid gap-6 md:grid-cols-2">
-      {SITE.locations.map((loc) => {
-        const mapsQuery = encodeURIComponent(
-          `${loc.street}, ${loc.city}, ${loc.region} ${loc.postal}`
-        );
-        const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+      {
+        SITE.locations.map((loc) => {
+          const mapsQuery = encodeURIComponent(
+            `${loc.street}, ${loc.city}, ${loc.region} ${loc.postal}`,
+          );
+          const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
 
-        return (
-          <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div class="font-semibold text-slate-900">{loc.label}</div>
-            <div class="mt-1 text-slate-600">{loc.street}</div>
-            <div class="text-slate-600">
-              {loc.city}, {loc.region} {loc.postal}
-            </div>
+          return (
+            <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div class="font-semibold text-slate-900">
+                {loc.label} - {loc.review}★ Google Reviews
+              </div>
+              <div class="mt-1 text-slate-600">{loc.street}</div>
+              <div class="text-slate-600">
+                {loc.city}, {loc.region} {loc.postal}
+              </div>
 
-            <div class="mt-4 flex flex-wrap gap-3">
-              <a
-                href={`tel:${loc.phone}`}
-                class="rounded-lg bg-emerald-600 px-4 py-2.5 font-semibold text-white shadow-sm hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-              >
-                Call {loc.phoneHuman}
-              </a>
-              <a
-                href={`sms:${loc.phone}`}
-                class="rounded-lg border border-emerald-600 px-4 py-2.5 font-semibold text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-              >
-                Text {loc.phoneHuman}
-              </a>
-              <a
-                href={mapsUrl}
-                target="_blank"
-                rel="noopener"
-                class="rounded-lg border border-slate-300 px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-              >
-                Directions
-              </a>
+              <div class="mt-4 flex flex-wrap gap-3">
+                <a
+                  href={`tel:${loc.phone}`}
+                  class="rounded-lg bg-emerald-600 px-4 py-2.5 font-semibold text-white shadow-sm hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                >
+                  Call {loc.phoneHuman}
+                </a>
+                <a
+                  href={`sms:${loc.phone}`}
+                  class="rounded-lg border border-emerald-600 px-4 py-2.5 font-semibold text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                >
+                  Text {loc.phoneHuman}
+                </a>
+                <a
+                  href={mapsUrl}
+                  target="_blank"
+                  rel="noopener"
+                  class="rounded-lg border border-slate-300 px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                >
+                  Directions
+                </a>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })
+      }
     </div>
   </section>
 

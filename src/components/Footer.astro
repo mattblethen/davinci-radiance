@@ -42,7 +42,7 @@ const LONE = (
         <div class="text-sm font-semibold uppercase tracking-wide text-slate-400">Locations</div>
         {SITE.locations.map((loc) => (
           <div class="rounded-lg border border-slate-800 p-4">
-            <div class="font-medium text-white">{loc.label}</div>
+            <div class="font-medium text-white">{loc.label} - {loc.review}★ Google Reviews</div>
             <div class="mt-1 text-sm text-slate-400">{loc.street}</div>
             <div class="text-sm text-slate-400">{loc.city}, {loc.region} {loc.postal}</div>
             <a href={`tel:${loc.phone}`} class="mt-2 inline-flex items-center gap-2 text-emerald-300 hover:text-emerald-200">

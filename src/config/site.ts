@@ -16,10 +16,11 @@ export const SITE = {
   locations: [
     {
       label: "North Colorado Springs",
-      street: "13570 Meadowgrass Dr, Suite No. 13 (Jeunesse Salon & Spa Suites)",
+      street: "13570 Meadowgrass Dr, Suite No. 13 (Jeunesse Salon & Spa Suites Inside the Accelerated Wealth Building)",
       city: "Colorado Springs",
       region: "CO",
       postal: "80921",
+      review:"5",
       phoneHuman: "(719) 684-5551",
       phone: "+17196845551"
     },
@@ -29,6 +30,7 @@ export const SITE = {
       city: "Lone Tree",
       region: "CO",
       postal: "80124",
+      review:"4.8",
       phoneHuman: "(303) 662-8422",
       phone: "+13036628422"
     }
