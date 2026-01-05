@@ -8,12 +8,12 @@ const { nav } = SITE;
 
 // Safely resolve locations with solid fallbacks, then assert non-null for TS.
 const SPRINGS = (
-  SITE.locations.find((l) => l.label === "North Colorado Springs") ??
+  SITE.locations.find((l) => l.label === "Colorado Springs") ??
   SITE.locations[0]
 )!;
 
 const LONE = (
-  SITE.locations.find((l) => l.label === "Lone Tree") ??
+  SITE.locations.find((l) => l.label === "Centennial") ??
   SITE.locations.find((l) => l !== SPRINGS) ??
   SITE.locations[1] ??
   SITE.locations[0]
@@ -115,7 +115,7 @@ const LONE = (
 <div class="bg-emerald-50 ring-1 ring-emerald-100">
   <div class="mx-auto max-w-7xl px-4 py-2 text-center text-sm text-emerald-900">
     <span class="mr-2 inline-block h-2 w-2 rounded-full bg-emerald-500 align-middle"></span>
-    Now serving <strong>North Colorado Springs</strong> & <strong>Lone Tree</strong>
+    Now Serving Colorado Springs and Centennial!
   </div>
 </div>
 

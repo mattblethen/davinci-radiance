@@ -6,12 +6,12 @@ const year = new Date().getFullYear();
 
 // Safely resolve primary and secondary locations (with TS-safe fallback)
 const SPRINGS = (
-  SITE.locations.find((l) => l.label === "North Colorado Springs") ??
+  SITE.locations.find((l) => l.label === "Colorado Springs") ??
   SITE.locations[0]
 )!;
 
 const LONE = (
-  SITE.locations.find((l) => l.label === "Lone Tree") ??
+  SITE.locations.find((l) => l.label === "Centennial") ??
   SITE.locations.find((l) => l !== SPRINGS) ??
   SITE.locations[1] ??
   SITE.locations[0]
@@ -42,7 +42,7 @@ const LONE = (
         <div class="text-sm font-semibold uppercase tracking-wide text-slate-400">Locations</div>
         {SITE.locations.map((loc) => (
           <div class="rounded-lg border border-slate-800 p-4">
-            <div class="font-medium text-white">{loc.label} - {loc.review}★ Google Reviews</div>
+            <div class="font-medium text-white">{loc.locWidge} - {loc.review}★ Google Reviews</div>
             <div class="mt-1 text-sm text-slate-400">{loc.street}</div>
             <div class="text-sm text-slate-400">{loc.city}, {loc.region} {loc.postal}</div>
             <a href={`tel:${loc.phone}`} class="mt-2 inline-flex items-center gap-2 text-emerald-300 hover:text-emerald-200">
@@ -145,4 +145,5 @@ const LONE = (
       <p class="mt-3">&copy; {year} {SITE.name}. All rights reserved.</p>
     </div>
   </div>
+  <div style="text-align:center;padding-bottom:2rem;"><a href="https://mattblethen.com">Site Designed & Developed By <span style="text-decoration:underline">Matt Blethen</span></a></div>
 </footer>

@@ -15,8 +15,9 @@ export const SITE = {
   ],
   locations: [
     {
-      label: "North Colorado Springs",
-      street: "13570 Meadowgrass Dr, Suite No. 13 (Jeunesse Salon & Spa Suites Inside the Accelerated Wealth Building)",
+      label: "Colorado Springs",
+      locWidge:"Jeunesse Salon & Spa",
+      street: "13570 Meadowgrass Dr, Suite #13",
       city: "Colorado Springs",
       region: "CO",
       postal: "80921",
@@ -25,11 +26,12 @@ export const SITE = {
       phone: "+17196845551"
     },
     {
-      label: "Lone Tree",
-      street: "8401 Park Meadows Center Dr, Level 1 (Near Hollister)",
-      city: "Lone Tree",
+      label: "Centennial",
+      locWidge:"Solera Salon Suites",
+      street: "8770 E Arapahoe Rd, Suite 101",
+      city: "Centennial",
       region: "CO",
-      postal: "80124",
+      postal: "80112",
       review:"4.8",
       phoneHuman: "(303) 662-8422",
       phone: "+13036628422"

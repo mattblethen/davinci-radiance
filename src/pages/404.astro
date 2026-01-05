@@ -1,0 +1,23 @@
+---
+// 404.astro
+import Base from "../layouts/Base.astro";
+
+const PAGE = {
+  title: "Page Not Found — DaVinci Radiance",
+  description: "This page does not exist."
+};
+---
+
+<Base title={PAGE.title} description={PAGE.description}>
+  <section class="container mx-auto py-24 text-center">
+    <h1 class="text-5xl font-semibold text-blue-600 mb-6">
+      404
+    </h1>
+    <p class="text-lg text-gray-700 mb-8">
+      Looks like this page took a wrong turn somewhere.
+    </p>
+    <a href="/" class="inline-block rounded-lg bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700 transition">
+      Back to Home
+    </a>
+  </section>
+</Base>

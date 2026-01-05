@@ -16,10 +16,10 @@ const PAGE = {
 
 // TS-safe primary/secondary locations (prioritize Colorado Springs)
 const SPRINGS = (SITE.locations.find(
-  (l) => l.label === "North Colorado Springs",
+  (l) => l.label === "Colorado Springs",
 ) ?? SITE.locations[0])!;
 
-const LONE = (SITE.locations.find((l) => l.label === "Lone Tree") ??
+const LONE = (SITE.locations.find((l) => l.label === "Centennial") ??
   SITE.locations.find((l) => l !== SPRINGS) ??
   SITE.locations[1] ??
   SITE.locations[0])!;
@@ -28,7 +28,7 @@ const LONE = (SITE.locations.find((l) => l.label === "Lone Tree") ??
 const schemaLocal = SITE.locations.map((loc) => ({
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  name: `${SITE.name} — ${loc.label}`,
+  name: `${SITE.name} — ${loc.locWidge}`,
   image: new URL("/favicon.svg", SITE.url).toString(),
   url: SITE.url,
   telephone: loc.phone,
@@ -274,7 +274,7 @@ const schemaLocal = SITE.locations.map((loc) => ({
       </div>
       <div>
         <div class="font-semibold text-slate-900">Two Colorado Locations</div>
-        <div class="text-sm text-slate-600">Colorado Springs & Lone Tree</div>
+        <div class="text-sm text-slate-600">Colorado Springs & Centennial</div>
       </div>
     </div>
 
@@ -288,7 +288,7 @@ const schemaLocal = SITE.locations.map((loc) => ({
 
           return (
             <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <div class="font-semibold text-slate-900">{loc.label} - {loc.review}★ Google Reviews</div>
+              <div class="font-semibold text-slate-900">{loc.locWidge} - {loc.review}★ Google Reviews</div>
               <div class="mt-1 text-slate-600">{loc.street}</div>
               <div class="text-slate-600">
                 {loc.city}, {loc.region} {loc.postal}

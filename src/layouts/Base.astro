@@ -3,6 +3,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { SITE } from "../config/site";
 import "../styles/global.css";
+import Analytics from '@vercel/analytics/astro'
 
 // Props you can override per page
 export interface Props {
@@ -133,5 +134,6 @@ const themeColor = "#0A2342";
     </main>
 
     <Footer />
+    <Analytics/>
   </body>
 </html>
