@@ -1,8 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
 import { SITE } from "../config/site";
-import { Image } from "astro:assets";
-import smilesImg from "../assets/images/Davinci Corporate image.jpeg";
 
 const PAGE = {
   title: "Book a Teeth Whitening Appointment | DaVinci Radiance",
@@ -50,69 +48,57 @@ const schema = SITE.locations.map((loc) => ({
   ogImage="/og-booknow.png"
   schema={schema}
 >
-  <section
-    class="relative mx-auto overflow-hidden rounded-b-3xl bg-slate-950 px-5 py-10 text-white sm:px-8 md:py-16"
-  >
-    <div class="absolute inset-0 opacity-25">
+  <section class="mx-auto max-w-6xl px-1 pt-10 sm:px-4 md:pt-14">
+    <div
+      class="relative overflow-hidden rounded-2xl bg-slate-50 px-6 py-10 ring-1 ring-slate-200 sm:px-10 md:py-14"
+    >
       <div
-        class="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-emerald-400 blur-3xl"
+        class="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-emerald-100/70 blur-3xl"
       >
       </div>
       <div
-        class="absolute -bottom-28 right-0 h-80 w-80 rounded-full bg-cyan-300 blur-3xl"
+        class="absolute -bottom-28 right-0 h-80 w-80 rounded-full bg-emerald-50 blur-3xl"
       >
       </div>
-    </div>
 
-    <div class="relative grid items-center gap-10 md:grid-cols-[1.05fr_0.95fr]">
-      <div class="max-w-2xl">
+      <div class="relative mx-auto max-w-4xl text-center">
         <p
-          class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300"
+          class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700"
         >
           Colorado Springs &amp; Centennial
         </p>
         <h1
-          class="mt-3 text-pretty text-4xl/tight font-semibold sm:text-5xl md:text-6xl"
+          class="mt-3 text-pretty text-4xl/tight font-semibold text-slate-900 sm:text-5xl md:text-6xl"
         >
           Book your brighter smile.
         </h1>
-        <p class="mt-5 max-w-xl text-lg leading-relaxed text-slate-200">
+        <p
+          class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-600"
+        >
           Choose your preferred studio below, then call or text us directly to
           find a time that works. Both locations welcome clients by appointment
           only.
         </p>
 
-        <div class="mt-7 flex flex-wrap gap-2 text-sm text-slate-100">
+        <div
+          class="mt-7 flex flex-wrap justify-center gap-2 text-sm text-slate-700"
+        >
           <span
-            class="rounded-full border border-white/20 bg-white/10 px-4 py-2"
+            class="rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm"
           >
             By appointment only
           </span>
           <span
-            class="rounded-full border border-white/20 bg-white/10 px-4 py-2"
+            class="rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm"
           >
             Call, text, or email
           </span>
           <span
-            class="rounded-full border border-white/20 bg-white/10 px-4 py-2"
+            class="rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm"
           >
             HSA &amp; FSA cards accepted
           </span>
         </div>
-      </div>
-
-      <div
-        class="overflow-hidden rounded-2xl bg-white/10 p-2 shadow-2xl ring-1 ring-white/15"
-      >
-        <Image
-          src={smilesImg}
-          alt="Two smiling DaVinci Radiance clients"
-          widths={[480, 768, 1024]}
-          sizes="(max-width: 768px) 100vw, 38rem"
-          loading="eager"
-          decoding="async"
-          class="aspect-square w-full rounded-xl object-cover"
-        />
       </div>
     </div>
   </section>
