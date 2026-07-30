@@ -11,6 +11,7 @@ export const SITE = {
     { label: "Process", href: "/process" },
     { label: "Results", href: "/results"},
     { label: "FAQ", href: "/#faq" },
+    { label: "Book Now", href: "/booknow" },
     { label: "About", href: "/about" }
   ],
   locations: [

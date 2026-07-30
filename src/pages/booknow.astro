@@ -1,0 +1,329 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE } from "../config/site";
+import { Image } from "astro:assets";
+import smilesImg from "../assets/images/Davinci Corporate image.jpeg";
+
+const PAGE = {
+  title: "Book a Teeth Whitening Appointment | DaVinci Radiance",
+  description:
+    "Book professional teeth whitening in Colorado Springs or Centennial. Call, text, email, or get directions to your preferred DaVinci Radiance location.",
+};
+
+const mapsUrl = (loc: (typeof SITE.locations)[number]) => {
+  const query = encodeURIComponent(
+    `${loc.street}, ${loc.city}, ${loc.region} ${loc.postal}`,
+  );
+  return `https://www.google.com/maps/search/?api=1&query=${query}`;
+};
+
+const emailUrl = (location: string) => {
+  const subject = encodeURIComponent(`Appointment request — ${location}`);
+  const body = encodeURIComponent(
+    `Hi DaVinci Radiance,\n\nI'd like to request an appointment at the ${location} location.\n\nPreferred days/times:\n\nFirst-time or returning client:\n\nThank you!`,
+  );
+  return `mailto:${SITE.email}?subject=${subject}&body=${body}`;
+};
+
+const schema = SITE.locations.map((loc) => ({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: `${SITE.name} — ${loc.locWidge}`,
+  url: `${SITE.url}/booknow`,
+  telephone: loc.phone,
+  email: SITE.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: loc.street,
+    addressLocality: loc.city,
+    addressRegion: loc.region,
+    postalCode: loc.postal,
+    addressCountry: "US",
+  },
+  sameAs: Object.values(SITE.social).filter(Boolean),
+}));
+---
+
+<Base
+  title={PAGE.title}
+  description={PAGE.description}
+  ogImage="/og-booknow.png"
+  schema={schema}
+>
+  <section
+    class="relative mx-auto overflow-hidden rounded-b-3xl bg-slate-950 px-5 py-10 text-white sm:px-8 md:py-16"
+  >
+    <div class="absolute inset-0 opacity-25">
+      <div
+        class="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-emerald-400 blur-3xl"
+      >
+      </div>
+      <div
+        class="absolute -bottom-28 right-0 h-80 w-80 rounded-full bg-cyan-300 blur-3xl"
+      >
+      </div>
+    </div>
+
+    <div class="relative grid items-center gap-10 md:grid-cols-[1.05fr_0.95fr]">
+      <div class="max-w-2xl">
+        <p
+          class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300"
+        >
+          Colorado Springs &amp; Centennial
+        </p>
+        <h1
+          class="mt-3 text-pretty text-4xl/tight font-semibold sm:text-5xl md:text-6xl"
+        >
+          Book your brighter smile.
+        </h1>
+        <p class="mt-5 max-w-xl text-lg leading-relaxed text-slate-200">
+          Choose your preferred studio below, then call or text us directly to
+          find a time that works. Both locations welcome clients by appointment
+          only.
+        </p>
+
+        <div class="mt-7 flex flex-wrap gap-2 text-sm text-slate-100">
+          <span
+            class="rounded-full border border-white/20 bg-white/10 px-4 py-2"
+          >
+            By appointment only
+          </span>
+          <span
+            class="rounded-full border border-white/20 bg-white/10 px-4 py-2"
+          >
+            Call, text, or email
+          </span>
+          <span
+            class="rounded-full border border-white/20 bg-white/10 px-4 py-2"
+          >
+            HSA &amp; FSA cards accepted
+          </span>
+        </div>
+      </div>
+
+      <div
+        class="overflow-hidden rounded-2xl bg-white/10 p-2 shadow-2xl ring-1 ring-white/15"
+      >
+        <Image
+          src={smilesImg}
+          alt="Two smiling DaVinci Radiance clients"
+          widths={[480, 768, 1024]}
+          sizes="(max-width: 768px) 100vw, 38rem"
+          loading="eager"
+          decoding="async"
+          class="aspect-square w-full rounded-xl object-cover"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto mt-12 max-w-6xl px-1 sm:px-4">
+    <div class="max-w-2xl">
+      <p
+        class="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700"
+      >
+        Choose a location
+      </p>
+      <h2 class="mt-2 text-3xl font-semibold text-slate-900">
+        Contact the studio nearest you
+      </h2>
+      <p class="mt-3 text-slate-600">
+        The fastest way to request an appointment is by phone or text. We’ll
+        confirm availability and answer any questions before your visit.
+      </p>
+    </div>
+
+    <div class="mt-7 grid gap-6 lg:grid-cols-2">
+      {
+        SITE.locations.map((loc, index) => (
+          <article class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div
+              class:list={[
+                "absolute inset-x-0 top-0 h-1.5",
+                index === 0 ? "bg-emerald-500" : "bg-slate-800",
+              ]}
+            />
+
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="text-sm font-semibold text-emerald-700">
+                  {loc.label}
+                </p>
+                <h3 class="mt-1 text-2xl font-semibold text-slate-900">
+                  {loc.locWidge}
+                </h3>
+              </div>
+              <span class="shrink-0 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-100">
+                Appointment only
+              </span>
+            </div>
+
+            <address class="mt-5 not-italic text-slate-600">
+              <div>{loc.street}</div>
+              <div>
+                {loc.city}, {loc.region} {loc.postal}
+              </div>
+            </address>
+
+            <div class="mt-6 grid gap-3 sm:grid-cols-2">
+              <a
+                href={`tel:${loc.phone}`}
+                class="inline-flex min-h-12 items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                aria-label={`Call the ${loc.label} location at ${loc.phoneHuman}`}
+              >
+                Call {loc.phoneHuman}
+              </a>
+              <a
+                href={`sms:${loc.phone}`}
+                class="inline-flex min-h-12 items-center justify-center rounded-xl border border-emerald-600 px-4 py-3 font-semibold text-emerald-700 transition hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                aria-label={`Text the ${loc.label} location at ${loc.phoneHuman}`}
+              >
+                Text {loc.phoneHuman}
+              </a>
+              <a
+                href={mapsUrl(loc)}
+                target="_blank"
+                rel="noopener"
+                class="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-300 px-4 py-3 font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                aria-label={`Get directions to the ${loc.label} location`}
+              >
+                Get directions
+              </a>
+              <a
+                href={emailUrl(loc.label)}
+                class="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-300 px-4 py-3 font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                aria-label={`Email an appointment request for the ${loc.label} location`}
+              >
+                Email this location
+              </a>
+            </div>
+
+            <p class="mt-5 text-sm text-slate-500">
+              Rated {loc.review}★ on Google
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mx-auto mt-14 max-w-6xl px-1 sm:px-4">
+    <div class="grid gap-6 md:grid-cols-[1.2fr_0.8fr]">
+      <div class="rounded-2xl bg-emerald-50 p-6 ring-1 ring-emerald-100 sm:p-8">
+        <p
+          class="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-800"
+        >
+          What to expect
+        </p>
+        <h2 class="mt-2 text-2xl font-semibold text-slate-900">
+          A simple, comfortable whitening visit
+        </h2>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl bg-white p-4 ring-1 ring-emerald-100">
+            <div class="font-semibold text-slate-900">
+              Plant &amp; mineral based
+            </div>
+            <p class="mt-1 text-sm leading-relaxed text-slate-600">
+              Professional whitening gel paired with a cool blue LED light.
+            </p>
+          </div>
+          <div class="rounded-xl bg-white p-4 ring-1 ring-emerald-100">
+            <div class="font-semibold text-slate-900">
+              Plan for about an hour
+            </div>
+            <p class="mt-1 text-sm leading-relaxed text-slate-600">
+              Sessions typically include three to four 20-minute light cycles.
+            </p>
+          </div>
+          <div class="rounded-xl bg-white p-4 ring-1 ring-emerald-100">
+            <div class="font-semibold text-slate-900">Visible results</div>
+            <p class="mt-1 text-sm leading-relaxed text-slate-600">
+              Many clients see immediate brightening; individual results vary.
+            </p>
+          </div>
+          <div class="rounded-xl bg-white p-4 ring-1 ring-emerald-100">
+            <div class="font-semibold text-slate-900">Flexible payment</div>
+            <p class="mt-1 text-sm leading-relaxed text-slate-600">
+              Major cards, tap to pay, and HSA or FSA cards are accepted in
+              studio.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="rounded-2xl bg-slate-900 p-6 text-white sm:p-8">
+        <p
+          class="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-300"
+        >
+          Make booking easy
+        </p>
+        <h2 class="mt-2 text-2xl font-semibold">
+          What to include in your message
+        </h2>
+        <ol class="mt-6 space-y-4 text-slate-200">
+          <li class="flex gap-3">
+            <span
+              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-500 font-semibold text-white"
+              >1</span
+            >
+            <span>Your preferred location</span>
+          </li>
+          <li class="flex gap-3">
+            <span
+              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-500 font-semibold text-white"
+              >2</span
+            >
+            <span>A few days and times that work for you</span>
+          </li>
+          <li class="flex gap-3">
+            <span
+              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-500 font-semibold text-white"
+              >3</span
+            >
+            <span>Whether you’re a first-time or returning client</span>
+          </li>
+        </ol>
+        <a
+          href={`mailto:${SITE.email}`}
+          class="mt-7 inline-flex w-full items-center justify-center rounded-xl bg-white px-4 py-3 font-semibold text-slate-900 transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+        >
+          {SITE.email}
+        </a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="mx-auto mt-12 max-w-4xl px-1 text-center sm:px-4">
+    <div class="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm">
+      <h2 class="text-2xl font-semibold text-slate-900">
+        Want to learn more first?
+      </h2>
+      <p class="mx-auto mt-3 max-w-2xl text-slate-600">
+        See how the whitening process works, browse real client results, or
+        review answers about safety, timing, and sensitivity.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a
+          href="/process"
+          class="rounded-lg border border-slate-300 px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50"
+        >
+          How it works
+        </a>
+        <a
+          href="/results"
+          class="rounded-lg border border-slate-300 px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50"
+        >
+          View results
+        </a>
+        <a
+          href="/#faq"
+          class="rounded-lg border border-slate-300 px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50"
+        >
+          Read FAQs
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="h-24 md:hidden"></div>
+</Base>
