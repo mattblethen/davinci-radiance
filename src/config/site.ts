@@ -23,6 +23,7 @@ export const SITE = {
       region: "CO",
       postal: "80921",
       review:"5",
+      appointmentNote: "By Appointment Only",
       phoneHuman: "(719) 684-5551",
       phone: "+17196845551"
     },
@@ -34,6 +35,7 @@ export const SITE = {
       region: "CO",
       postal: "80112",
       review:"4.8",
+      appointmentNote: "Evenings by appointment only",
       phoneHuman: "(303) 662-8422",
       phone: "+13036628422"
     }
